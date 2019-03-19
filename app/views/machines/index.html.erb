@@ -1,0 +1,7 @@
+<% @machines.each do |m| %>
+  <div>
+    <% m.attributes.each do |k,v| %>
+      <%= k %>: <%= v %>
+    <% end %>
+  </div>
+<% end %>
