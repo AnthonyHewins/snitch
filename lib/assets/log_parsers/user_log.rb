@@ -1,5 +1,5 @@
 require_relative './data_log'
-require_relative '../models/machine'
+require_relative Rails.root.join 'app/models/machine'
 
 class UserLog < DataLog
   FORMAT = "user_log_[0-9]*.csv"

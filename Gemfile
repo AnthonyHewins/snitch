@@ -8,8 +8,11 @@ gem 'uglifier', '>= 1.3.0'
 gem 'turbolinks', '~> 5'
 gem 'therubyracer'
 gem 'pg'
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+
+# For automatic SFTP downloads
+gem 'net-sftp'
+gem 'ed25519'
+gem 'bcrypt_pbkdf'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
@@ -27,6 +30,11 @@ group :development do
 end
 
 group :test do
+  gem 'rspec-rails'
+  gem 'ffaker'
+  gem 'factory_bot'
+  gem 'shoulda-matchers'
+  gem 'database_cleaner'
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
 end

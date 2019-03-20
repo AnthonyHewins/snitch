@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_14_190658) do
+ActiveRecord::Schema.define(version: 2019_03_20_182525) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,4 +49,5 @@ ActiveRecord::Schema.define(version: 2019_03_14_190658) do
     t.bigint "paper_trail_id"
     t.index ["paper_trail_id"], name: "index_whitelists_on_paper_trail_id"
   end
+
 end

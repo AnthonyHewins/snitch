@@ -1,5 +1,5 @@
 require_relative './data_log'
-require_relative '../models/machine'
+require Rails.root.join 'app/models/machine'
 
 class CarbonBlackLog < DataLog
   FORMAT = "device_status_[0-9\-]*.csv" 

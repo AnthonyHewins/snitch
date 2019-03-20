@@ -6,7 +6,7 @@ require_relative './application_record'
 
 class UriEntry < ApplicationRecord
   belongs_to :machine
-  belongs_to :paper_trail
+  belongs_to :paper_trail, optional: true
 
   validates :uri, format: {with: URI::regexp}
   validates_numericality_of :hits, only_integer: true, greater_than: 0
@@ -18,11 +18,6 @@ class UriEntry < ApplicationRecord
   def uri=(*args)
     @url = URI(args.first)
     super(*args)
-  end
-
-  def to_csv_row
-    machine_row = self.machine.to_csv_row(timestamps: false)
-    machine_row += [self.uri, self.hits, self.created_at, self.updated_at]
   end
 
   def self.[](machine)

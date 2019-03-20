@@ -1,7 +1,7 @@
 require_relative './data_log'
-require_relative '../models/uri_entry'
-require_relative '../models/whitelist'
-require_relative '../models/machine'
+require Rails.root.join 'app/models/uri_entry'
+require Rails.root.join 'app/models/whitelist'
+require Rails.root.join 'app/models/machine'
 
 class CyberAdaptLog < DataLog
   TIMESTAMP = /[0-9]+/
