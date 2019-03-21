@@ -1,0 +1,27 @@
+# SQLite version 3.x
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+#
+development:
+  adapter: 'postgresql'
+  host: '127.0.0.1'
+  port: 5432
+  database: 'development'
+  username: 'development'
+  password: 'development'
+test:
+  adapter: 'postgresql'
+  host: '127.0.0.1'
+  port: 5432
+  database: 'test'
+  username: 'test'
+  password: 'test'
+production:
+  adapter: 'postgresql'
+  host: '127.0.0.1'
+  port: 5432
+  database: 'production'
+  username: 'production'
+  password: ')j4M2#O?ra$A' # will be changed as soon as production actually exists
