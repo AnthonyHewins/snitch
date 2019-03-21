@@ -1,7 +1,7 @@
-<% @machines.each do |m| %>
-  <div>
-    <% m.attributes.each do |k,v| %>
-      <%= k %>: <%= v %>
-    <% end %>
-  </div>
-<% end %>
+<h1>All machines</h1>
+<%= render(
+    'shared/model_index',
+    model: Machine,
+    collection: @machines,
+    path: machines_upload_path
+)%>

@@ -17,9 +17,16 @@ class DataLog
     raise NotImplementedError
   end
 
+  def self.create_from_timestamped_file
+    raise NotImplementedError
+  end
+  
   private
   def parse_csv(arg, headers)
     case arg
+    when ActionDispatch::Http::UploadedFile
+      @filename = arg.original_filename
+      CSV.parse(arg.read, headers: headers)
     when Pathname
       @filename = arg.to_path
       CSV.read(arg, headers: headers)

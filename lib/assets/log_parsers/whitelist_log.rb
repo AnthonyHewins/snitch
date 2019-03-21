@@ -1,10 +1,16 @@
 require_relative './data_log'
 
 class WhitelistLog < DataLog
-  FORMAT = "whitelist_[0-9]*"
+  TIMESTAMP = /[0-9]+/
+  FORMAT = /whitelist_log_#{TIMESTAMP.source}.csv/i
+  GLOB_FORMAT = 'whitelist_log_[0-9]*.csv'
 
-  def initialize(file, date_override: nil)
-    super(file, true, date_override, nil, WhitelistLog) {|row| parse_row(row)}
+  def initialize(file, date_override: nil, regex: nil)
+    super(file, true, date_override, regex, WhitelistLog) {|row| parse_row(row)}
+  end
+
+  def self.create_from_timestamped_file(file)
+    WhitelistLog.new(file, regex: TIMESTAMP)
   end
 
   private

@@ -1,23 +1,14 @@
+require_relative 'log_controller'
 require Rails.root.join 'lib/assets/log_parsers/carbon_black_log'
 
-class MachinesController < ApplicationController
-  def show
-  end
-
+class MachinesController < LogController
   def index
     @machines = Machine.all
   end
 
-  def upload
-  end
-
+  # POST /machines/upload
   def insert_data
-    filtered_params = params.permit(:carbon_black, :date_override)
-    byebug
-    log = CarbonBlackLog.new(
-      filtered_params[:carbon_black].read,
-      date_override: Date.parse(filtered_params[:date_override])
-    )
+    carbon_black_log = get_log CarbonBlackLog, params
     redirect_to machines_path
   end
 end

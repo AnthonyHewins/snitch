@@ -1,3 +1,4 @@
+require 'tempfile'
 require 'rails_helper'
 Dir.glob(Rails.root.join 'lib/assets/log_parsers/*').each do |f|
   require f
@@ -21,6 +22,12 @@ RSpec.describe DataLog do
   it {should have_attr_reader :date_override}
   it {should have_abstract_method :parse_row}
 
+  context 'protected:' do
+    it '::create_from_timestamped_file raises NotImplementedError' do
+      expect{DataLog.create_from_timestamped_file}.to raise_error NotImplementedError
+    end
+  end
+  
   context 'private:' do
     context '#read' do
       before :each do
@@ -39,6 +46,72 @@ RSpec.describe DataLog do
     end
     
     context '#parse_csv' do
+      context 'on ActionDispatch::Http::UploadedFile input' do
+        before :all do
+          @tempfile = Tempfile.new 'asf'
+          @tempfile.write @headers.join(',') + "\n" + @headers.join(',')
+        end
+        
+        before :each do
+          @tempfile.rewind
+          @file = ActionDispatch::Http::UploadedFile.new tempfile: @tempfile
+        end
+
+        it 'returns CSV::Table' do
+          expect(@obj.send :parse_csv, @file, true).to be_instance_of CSV::Table
+        end
+
+        it 'it uses the headers' do
+          expect(@obj.send(:parse_csv, @file, true).headers).to eq @headers
+        end
+
+        context 'when headers is false' do
+          it 'returns a 2D array' do
+            expect(@obj.send :parse_csv, @file, false).to be_instance_of Array
+          end
+
+          it 'it treats the first row as part of the content' do
+            # It should match exactly the contents that was put into it
+            expect(@obj.send(:parse_csv, @file, false)).to eq [@headers] * 2
+          end
+        end
+        
+        it 'sets the @filename to arg.original_filename' do
+          @obj.send :parse_csv, @file, false
+          expect(@obj.filename).to eq @file.original_filename
+        end
+      end
+      
+      context 'on Pathname input' do
+        before :each do
+          @pathname = Pathname.new @path
+        end
+
+        it 'returns CSV::Table' do
+          expect(@obj.send :parse_csv, @pathname, true).to be_instance_of CSV::Table
+        end
+
+        it 'it uses the headers' do
+          expect(@obj.send(:parse_csv, @pathname, true).headers).to eq @headers
+        end
+
+        context 'when headers is false' do
+          it 'returns a 2D array' do
+            expect(@obj.send :parse_csv, @pathname, false).to be_instance_of Array
+          end
+
+          it 'it treats the first row as part of the content' do
+            # It should match exactly the contents that was put into it
+            expect(@obj.send(:parse_csv, @pathname, false)).to eq [@headers] * 2
+          end
+        end
+        
+        it 'sets the @filename to arg.to_path' do
+          @obj.send :parse_csv, @pathname, false
+          expect(@obj.filename).to eq @pathname.to_path
+        end
+      end
+      
       context 'on string input' do
         context 'when headers is true' do
           it 'returns CSV::Table' do

@@ -1,2 +1,10 @@
-<h1>UriEntries#index</h1>
-<p>Find me in app/views/uri_entries/index.html.erb</p>
+<h1>All uri_entries</h1>
+
+<%= link_to "Pull new log entries from CyberAdapt", uri_entries_refresh_path %>
+
+<%= render(
+    'shared/model_index',
+    model: UriEntry,
+    collection: @uri_entries,
+    path: uri_entries_upload_path
+)%>

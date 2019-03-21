@@ -1,0 +1,23 @@
+<%= form_tag path, method: :post, multipart: true do %>
+
+  <label>Log in csv form</label>
+  <p>
+    *keeping the default filename allows there to be more metadata extrapolated
+    Alternatively, you can always supply this metadata below.
+  </p>
+  <%= file_field_tag "log", accept: 'text/csv' %>
+
+  <br>
+
+  <label>Date override (not required)</label>
+  <%= date_field_tag "date_override" %>
+
+  <br>
+  
+  <p>
+    Heads up, this can take a long time! As long as the loading circle keeps moving you should be good.
+    Some of these log files have well over 9000 entries, and normally this isn't slow, but all the checks
+    that need to be done make it much longer.
+  </p>
+  <%= submit_tag :submit %>
+<% end %>

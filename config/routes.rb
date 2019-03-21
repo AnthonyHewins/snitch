@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   post 'machines/upload' => 'machines#insert_data'
   post 'uri_entries/upload' => 'uri_entries#insert_data'
 
-
+  get 'uri_entries/refresh' => 'uri_entries#pull_from_cyberadapt'
+  
   resources :uri_entries, only: [:index, :show]
   resources :machines, only: [:index, :show]
 

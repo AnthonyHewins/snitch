@@ -1,0 +1,9 @@
+<% flash.each do |k,v| %>
+  <% if v.is_a? Exception %>
+    <%= v %>
+  <% elsif v.is_a? DataLog %>
+    <%= v %>
+  <% else %>
+    <%= v %>
+  <% end %>
+<% end %>

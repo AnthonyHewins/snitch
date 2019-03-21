@@ -6,6 +6,7 @@ require Rails.root.join 'app/models/machine'
 class CyberAdaptLog < DataLog
   TIMESTAMP = /[0-9]+/
   FORMAT = /flexplan_srcip_host_#{TIMESTAMP.source}.csv/i
+  GLOB_FORMAT = './flexplan_srcip_host_[0-9]*.csv'
   
   def initialize(file, date_override: nil, regex: nil)
     super(file, false, date_override, regex, CyberAdaptLog) {|row| parse_row(row)}
