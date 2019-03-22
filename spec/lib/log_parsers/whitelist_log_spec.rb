@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require Rails.root.join 'lib/assets/log_parsers/whitelist_log'
 
 RSpec.describe WhitelistLog do
@@ -11,28 +11,34 @@ RSpec.describe WhitelistLog do
     end
   end
 
+  before :each do
+    @obj = WhitelistLog.new(@filename)
+  end
+  
   it 'inherits from DataLog' do
     expect(WhitelistLog).to be < DataLog
   end
 
-  context '#initialize reads in the CSV given with filename and' do
-    it 'creates the whitelist element if the regex is valid' do
-      expect{WhitelistLog.new @filename}.to change{Whitelist.count}.by 1
-    end
-
-    it 'files the Whitelist into @dirty if it has errors' do
-      # Create an error in the CSV to force the read to put the Whitelist in @dirty
-      file_with_errors = @filename + 'dirty'
-      CSV.open(file_with_errors, 'wb') do |csv|
-        csv << ['regex_string']
-        csv << ["[0-"]
+  context 'private:' do
+    context '#parse_row(row)' do
+      it 'returns the Whitelist entry if it succeeds in insertion' do
+        expect(@obj.send :parse_row, {'regex_string' => @regex}).to be_instance_of Whitelist
       end
 
-      expect(WhitelistLog.new(file_with_errors).dirty.size).to eq 1
-    end
+      it 'creates the whitelist element if the regex is valid' do
+        expect{@obj.send :parse_row, {'regex_string' => "a[0-9]*"}}
+          .to change{Whitelist.count}.by 1
+      end
 
-    it 'files the Whitelist into @clean if it has no errors' do
-      expect(WhitelistLog.new(@filename).clean.size).to eq 1
+      it 'doesnt create the whitelist element if it exists already' do
+        expect{@obj.send :parse_row, {'regex_string' => @regex}}
+          .not_to change{Whitelist.count}
+      end
+
+      it 'files the Whitelist into @dirty if it has errors' do
+        expect{@obj.send :parse_row, {'regex_string' => "[0-"}}
+          .to change{@obj.dirty.size}.by 1
+      end
     end
   end
 end

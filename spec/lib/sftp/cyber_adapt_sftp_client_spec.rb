@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require_relative '../../../lib/assets/sftp/cyber_adapt_sftp_client'
 
 RSpec.describe CyberAdaptSftpClient do
@@ -21,15 +21,10 @@ RSpec.describe CyberAdaptSftpClient do
   end
 
   context 'private:' do
-    context '#duck_type_for_timestamped_filename(possible_date)' do
-      it 'returns possible_date if it isnt a Date' do
-        not_a_date = 1
-        expect(@obj.send :duck_type_for_timestamped_filename, not_a_date).to be not_a_date
-      end
-
+    context '#to_timestamped_filename(date)' do
       it 'returns a formatted string matching CyberAdapts naming convention' do
-        expect(@obj.send :duck_type_for_timestamped_filename, Date.today)
-          .to eq "flexplan_srcip_host_#{Date.today.strftime("%Y%m%d")}"
+        expect(@obj.send :to_timestamped_filename, Date.today)
+          .to eq "flexplan_srcip_host_#{Date.today.strftime("%Y%m%d")}.csv"
       end
     end
   end

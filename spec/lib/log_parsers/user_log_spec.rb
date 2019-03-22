@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'rails_helper'
+require_relative '../../../lib/assets/log_parsers/user_log'
 
 RSpec.describe UserLog do
   before :all do
@@ -23,15 +24,14 @@ RSpec.describe UserLog do
         @machine = create :machine, host: @host
       end
 
-      it 'it puts the machine in @clean' do
-        @obj.send(:parse_row, @row)
-        expect(@obj.clean).to eq [@machine]
+      it 'returns true on the success of machine.update' do
+        expect(@obj.send(:parse_row, @row)).to be true
       end
 
       it 'it updates the paper trail' do
         @machine.update paper_trail: create(:paper_trail)
         @obj.send(:parse_row, @row)
-        expect(@obj.clean.first.paper_trail).to eq nil
+        expect(@machine.reload.paper_trail).to be nil
       end
 
       it 'it updates the machine user' do

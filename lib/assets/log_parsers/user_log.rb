@@ -23,7 +23,6 @@ class UserLog < DataLog
       @dirty << row
     else
       machine.update user: row['user'], paper_trail: @date_override
-      @clean << machine
     end
   end
 end

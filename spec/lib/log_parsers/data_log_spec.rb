@@ -27,7 +27,7 @@ RSpec.describe DataLog do
       expect{DataLog.create_from_timestamped_file}.to raise_error NotImplementedError
     end
   end
-  
+
   context 'private:' do
     context '#read' do
       before :each do
@@ -38,10 +38,8 @@ RSpec.describe DataLog do
         expect(@read_result).to eq ['12'] * 2
       end
 
-      [:@clean, :@dirty].each do |var|
-        it "inits #{var} to []" do
-          expect(@obj.instance_variable_get var).to eq []
-        end
+      it "inits @dirty to []" do
+        expect(@obj.dirty).to eq []
       end
     end
     

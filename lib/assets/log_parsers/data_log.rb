@@ -51,7 +51,7 @@ class DataLog
   end
 
   def read(csv, &block)
-    @clean, @dirty = [], []
+    @dirty = []
     csv.map(&block)
   end
 

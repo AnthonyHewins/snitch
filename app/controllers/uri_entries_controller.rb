@@ -21,7 +21,7 @@ class UriEntriesController < LogController
   def open_sftp_and_upsert
     date_range = dates_that_need_to_be_downloaded
     flash[:info] = "Already up to date" if date_range.empty?
-    sftp = CyberAdaptSftpClient.new nil, nil, passphrase: "Alpha124816!"
+    sftp = CyberAdaptSftpClient.new
     date_range.map {|date| sftp_download_and_upsert sftp, date}
   end
 
@@ -29,11 +29,13 @@ class UriEntriesController < LogController
     next_date_needed = PaperTrail.select(:insertion_date).max.insertion_date + 1
     (next_date_needed..Date.today).to_a
   end
-  
+
   def sftp_download_and_upsert(sftp, date)
+    ActiveRecord::Base.logger = nil
+    byebug
     file = sftp.pull date
     return nil if file.nil?
-    log = CyberAdaptLog.create_from_timestamped_file sftp.pull(date)
+    log = CyberAdaptLog.create_from_timestamped_file file
     "Upserted #{log.clean.size} and ran into #{log.dirty.size} errors"
   end
 end

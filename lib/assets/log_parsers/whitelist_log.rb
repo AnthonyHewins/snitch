@@ -16,9 +16,7 @@ class WhitelistLog < DataLog
   private
   def parse_row(row)
     begin
-      @clean << Whitelist.find_or_create_by(
-        regex_string: Regexp.new(row['regex_string']).to_s
-      )
+      Whitelist.find_or_create_by regex_string: Regexp.new(row['regex_string']).to_s
     rescue Exception => e
       row['error'] = e
       @dirty << row

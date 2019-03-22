@@ -20,7 +20,6 @@ class CarbonBlackLog < DataLog
     begin
       machine = Machine.find_or_create_by ip: ip
       machine.update!(host: host, paper_trail: @date_override)
-      @clean << machine
     rescue Exception => e
       row['error'] = e
       @dirty << row

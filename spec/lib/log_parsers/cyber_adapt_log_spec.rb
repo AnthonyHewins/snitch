@@ -33,7 +33,7 @@ RSpec.describe CyberAdaptLog do
       it 'creates a UriEntry from the row when there are no problems' do
         expect{CyberAdaptLog.new @filename}.to change{UriEntry.count}.by 1
       end
-      
+
       it 'files the UriEntry into @dirty if it has errors' do
         # Create an error in the CSV to force the read to put the UriEntry in @dirty
         file_with_errors = @filename + 'dirty'
@@ -46,6 +46,10 @@ RSpec.describe CyberAdaptLog do
         expect(@obj.clean.size).to eq 1
       end
 
+      it 'inits @whitelist to Whitelist.select(:regex_string).map(&:regex)' do
+        expect(@obj.instance_variable_get :@whitelist).to eq Whitelist.select(:regex_string).map(&:regex)
+      end
+      
       it 'skips the entry if theres a regex in the whitelist matching it' do
         create :whitelist, regex_string: @uri
         obj = CyberAdaptLog.new @filename
@@ -55,19 +59,6 @@ RSpec.describe CyberAdaptLog do
   end
 
   context 'private:' do
-    context '#whitelist' do
-      it 'returns Whitelist.select(:regex_string).map(&:regex)' do
-        expect(@obj.send :whitelist).to eq Whitelist.select(:regex_string).map(&:regex)
-      end
-
-      it 'memoizes above with @whitelist' do
-        @obj.send :whitelist
-        expect(@obj.instance_variable_get :@whitelist).to(
-          eq Whitelist.select(:regex_string).map(&:regex)
-        )
-      end
-    end
-
     context '#matches_invalid_format?' do
       it 'returns false when matched with /<hostname[>]*/' do
         (0..2).each do |i|
