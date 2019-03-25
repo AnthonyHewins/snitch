@@ -1,21 +1,23 @@
-<%= form_tag path, method: :post, multipart: true do %>
+<%= form_tag path, method: :post, multipart: true, class: "ui form" do %>
 
-  <label>Log in csv form</label>
-  <p>
-    *keeping the default filename allows there to be more metadata extrapolated
-    Alternatively, you can always supply this metadata below.
-  </p>
-  <%= file_field_tag "log", accept: 'text/csv' %>
+  <div class="field">
+    <%= label_tag :log, "Log in CSV form" %>
+    <p>
+      *keeping the default filename allows there to be more metadata extrapolated.
+      Alternatively, you can always supply this metadata below.
+    </p>
+    <%= file_field_tag "log", accept: 'text/csv' %>
+  </div>
 
-  <br>
-
-  <label>Date override (not required)</label>
-  <%= date_field_tag "date_override" %>
+  <div class="field">
+    <%= label_tag :date_override, "When was this data recorded?" %>
+    <%= date_field_tag :date_override %>
+  </div>
 
   <br>
   
   <p>
-    Heads up, this can take a long time! As long as your browser still shows loading, you should be good.
+    *this can take a very long time depending on how much data is in the file.
   </p>
-  <%= submit_tag :submit %>
+  <%= submit_tag "Submit", class: "ui button" %>
 <% end %>

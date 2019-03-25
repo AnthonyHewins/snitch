@@ -8,6 +8,8 @@ gem 'uglifier', '>= 1.3.0'
 gem 'turbolinks', '~> 5'
 gem 'therubyracer'
 gem 'pg'
+gem 'activerecord-import'
+gem 'semantic-ui-sass'
 
 # For automatic SFTP downloads
 gem 'net-sftp'

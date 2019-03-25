@@ -17,6 +17,7 @@ class CarbonBlackLog < DataLog
   private
   def parse_row(row)
     ip, host = row['lastInternalIpAddress'], row['name']
+    return if ip.blank?
     begin
       machine = Machine.find_or_create_by ip: ip
       machine.update!(host: host, paper_trail: @date_override)

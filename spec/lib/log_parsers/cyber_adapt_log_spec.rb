@@ -46,10 +46,6 @@ RSpec.describe CyberAdaptLog do
         expect(@obj.clean.size).to eq 1
       end
 
-      it 'inits @whitelist to Whitelist.select(:regex_string).map(&:regex)' do
-        expect(@obj.instance_variable_get :@whitelist).to eq Whitelist.select(:regex_string).map(&:regex)
-      end
-      
       it 'skips the entry if theres a regex in the whitelist matching it' do
         create :whitelist, regex_string: @uri
         obj = CyberAdaptLog.new @filename
@@ -59,10 +55,29 @@ RSpec.describe CyberAdaptLog do
   end
 
   context 'private:' do
+    context '#init_vars_before_super' do
+      before :each do
+        @obj.send :init_vars_before_super
+      end
+      
+      it 'inits @clean to []' do
+        expect(@obj.instance_variable_get :@clean).to eq []
+      end
+
+      it 'inits @whitelist to Whitelist.select(:regex_string).map(&:regex)' do
+        expect(@obj.instance_variable_get :@whitelist)
+          .to eq Whitelist.select(:regex_string).map(&:regex)
+      end
+    end
+
     context '#matches_invalid_format?' do
+      it 'returns false when blank?' do
+        expect(@obj.send :matches_invalid_format?, "").to be true
+      end
+      
       it 'returns false when matched with /<hostname[>]*/' do
         (0..2).each do |i|
-          expect(@obj.send :matches_invalid_format?, "<hostname" + (">" * i)).to be true
+          expect(@obj.send :matches_invalid_format?, "<hostname#{">" * i}").to be true
         end
       end
 
@@ -92,15 +107,46 @@ RSpec.describe CyberAdaptLog do
       end
     end
 
-    context '#add_to_list' do
+    context '#queue_insert' do
       it "appends a CSV::Row to @dirty if there's an error" do
-        @obj.send :add_to_list, @ip, @uri, 'a', nil
+        @obj.send :queue_insert, @ip, @uri, 'a', nil
         expect(@obj.dirty.first).to be_instance_of CSV::Row
       end
       
-      it 'appends a UriEntry to @clean if all the arguments are valid' do
-        @obj.send :add_to_list, @ip, @uri, @hits, create(:paper_trail)
-        expect(@obj.clean.first).to eq UriEntry.first
+      it 'appends a row of primitives to @clean for insertion later' do
+        paper_trail = create(:paper_trail)
+        @obj.send :queue_insert, @ip, @uri, @hits, paper_trail
+        expect(@obj.clean.last)
+          .to eq [Machine.find_by(ip: @ip).id, @uri, @hits, paper_trail.id]
+      end
+    end
+
+    context '#memoize_ip(ip_as_a_string)' do
+      before :each do
+        # Clear old value from instantiation
+        @obj.instance_variable_set :@ip_lookup_table, {}
+        @machine = create(:machine)
+      end
+      
+      it 'finds the machine with said ip and records its ID for memoization' do
+        expect(@obj.send :memoize_ip, @machine.ip.to_s).to eq @machine.id
+      end
+
+      it 'is able to return the ID without SQL using @ip_lookup_table' do
+        @obj.send :memoize_ip, @machine.ip.to_s
+        expect(@obj.instance_variable_get(:@ip_lookup_table))
+          .to eq({@machine.ip.to_s => @machine.id})
+      end
+    end
+    
+    context '#mass_insert' do
+      it 'inserts a UriEntry array in the most low-level way possible for speed' do
+        dummy_machine, dummy_paper_trail = create(:machine).id, create(:paper_trail).id
+        two_records = [
+          [dummy_machine, @uri, 1, dummy_paper_trail],
+          [dummy_machine, @uri, 1, dummy_paper_trail],
+        ]
+        expect{@obj.send :mass_insert, two_records}.to change{UriEntry.count}.by(2)
       end
     end
   end

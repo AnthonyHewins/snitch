@@ -1,23 +1,25 @@
-<% latest_date = PaperTrail.select(:insertion_date).max %>
+<h1>CyberAdapt traffic</h1>
+<h3>Total: <%= UriEntry.count %></h3>
 
-<% if latest_date.nil? %>
-  <h1>All traffic this website knows of so far</h1>
-<% else %>
-  <h1>All traffic CyberAdapt has caught, up to <%= latest_date.insertion_date %></h1>
+<%= form_tag uri_entries_path, method: :get, class: "ui form" do |f| %>
+  <div class="ui icon input">
+    <%= text_field_tag :q, nil, placeholder: "Search" %>
+    <i class="search icon"></i>
+  </div>
 <% end %>
 
 <%= link_to "Pull new log entries from CyberAdapt", uri_entries_refresh_path %>
 
-<%= link_to "Upload", uri_entries_upload_path %>
-
-<table>
+<table class="ui striped celled table">
   <thead>
     <tr>
       <th>ID</th>
-      <th>Machine</th>
+      <th>User</th>
+      <th>Host</th>
+      <th>IP</th>
       <th>URI</th>
       <th>Hits</th>
-      <th>Was recorded on</th>
+      <th>CyberAdapt recorded this on</th>
       <th>Was put into the database at</th>
       <th>Was last updated at</th>
     </tr>
@@ -26,6 +28,8 @@
     <% @uri_entries.each do |row| %>
       <tr>
         <%= content_tag :td, row.id %>
+        <%= content_tag :td, row.machine&.user %>
+        <%= content_tag :td, row.machine&.host %>
         <%= content_tag :td, row.machine&.ip %>
         <%= content_tag :td, row.uri %>
         <%= content_tag :td, row.hits %>

@@ -23,30 +23,30 @@ RSpec.describe CarbonBlackLog do
 
   it 'handles one of the fixture CSVs to give confidence that it works' do
     log = CarbonBlackLog.new Rails.root.join("spec/fixtures/carbon_black.csv").to_s
-    expect(log.clean.size).to eq 234
+    expect(log.dirty.size).to eq 0
   end
 
   context 'private:' do
-    context '#parse_row' do
-      it 'raises a NoMethodError if the arg doesnt respond_to #[]' do
+    context '#parse_row(row)' do
+      it 'raises a NoMethodError unless row.respond_to? #[]' do
         expect{@obj.send :parse_row, Object.new}.to raise_error NoMethodError
       end
 
       context 'on good data' do
-        context 'and in the DB already' do
-          before :each do
-            Machine.delete_all
-            @machine = create :machine, ip: @ip
-          end
+        before :each do
+          Machine.delete_all
+          @machine = create :machine, ip: @ip
+          @hash = {'lastInternalIpAddress' => @ip, 'name' => FFaker::Lorem.word}
+        end
 
+        context 'and in the DB already' do
           it 'uses the old instance if a machine exists with the IP from the file' do
-            expect{CarbonBlackLog.new @filename}.not_to change{Machine.count}
+            expect{@obj.send :parse_row, @hash}.not_to change{Machine.count}
           end
 
           it 'replaces the name of the machine' do
-            previous_name = @machine.host
-            expect{CarbonBlackLog.new @filename}
-              .to change{@machine.reload.host}.from(previous_name).to(@name)
+            expect{@obj.send :parse_row, @hash}
+              .to change{@machine.reload.host}.from(@machine.host).to(@hash['name'])
           end
 
           it 'replaces the PaperTrail that it points to' do
@@ -63,20 +63,14 @@ RSpec.describe CarbonBlackLog do
           end
         end
 
-        it 'puts the record in @clean' do
-          x = CarbonBlackLog.new @filename
-          expect(x.clean.size).to eq 1
+        it 'returns true on successful update' do
+          expect(@obj.send :parse_row, @hash).to be true
         end
       end
 
       it 'in the event of an exception, << the CSV::Row to @dirty with its error attached' do
-        # Create a new CSV with a bad value for IP
-        bad_data_path = @filename + 'dirty'
-        CSV.open(bad_data_path, 'wb') do |csv|
-          csv << ['lastInternalIPAddress', 'name']
-          csv << ['a', 'asdasda']
-        end
-        expect(CarbonBlackLog.new(bad_data_path).dirty.size).to eq 1
+        @obj.send :parse_row, {'lastInternalIpAddress' => '1-', 'name': 'a'}
+        expect(@obj.dirty.size).to eq 1
       end
     end
   end

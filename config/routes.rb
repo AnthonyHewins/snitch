@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'drligma' => 'static#drligma'
+  
   get 'machines/upload' => 'machines#upload'
   get 'uri_entries/upload' => 'uri_entries#upload'
   post 'machines/upload' => 'machines#insert_data'

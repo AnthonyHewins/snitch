@@ -9,10 +9,9 @@ class CyberAdaptLog < DataLog
   GLOB_FORMAT = './flexplan_srcip_host_[0-9]*.csv'
 
   def initialize(file, date_override: nil, regex: nil)
-    @clean, @whitelist = [], Whitelist.select(:regex_string).map(&:regex)
+    init_vars_before_super
     super(file, false, date_override, regex, CyberAdaptLog) {|row| parse_row(row)}
-    insert_uri_entries @clean
-    @clean = nil # clear for performance
+    mass_insert @clean
   end
 
   def self.create_from_timestamped_file(file)
@@ -20,10 +19,15 @@ class CyberAdaptLog < DataLog
   end
 
   private
+  def init_vars_before_super
+    @clean, @ip_lookup_table = [], {}
+    @whitelist = Whitelist.select(:regex_string).map(&:regex)
+  end
+  
   def parse_row(row)
     uri = parse_uri row[1]
     return if uri.nil? || @whitelist.any? {|regex| regex.match? uri}
-    add_to_list(row[0], uri, row[2], @date_override)
+    queue_insert(row[0], uri, row[2], @date_override)
   end
 
   def parse_uri(uri)
@@ -46,14 +50,9 @@ class CyberAdaptLog < DataLog
     URI::regexp.match?(uri) ? uri : 'http://' + uri
   end
 
-  def add_to_list(ip, uri, hits, paper_trail)
+  def queue_insert(ip, uri, hits, paper_trail)
     begin
-      @clean << [
-        Machine.find_or_create_by(ip: ip).ip,
-        uri,
-        Integer(hits),
-        paper_trail&.id
-      ]
+      @clean << [memoize_ip(ip), uri, Integer(hits), paper_trail&.id]
     rescue Exception => e
       @dirty << CSV::Row.new(
         ['ip', 'uri', 'hits', 'paper_trail' , 'error'],
@@ -62,11 +61,15 @@ class CyberAdaptLog < DataLog
     end
   end
 
-  def insert_uri_entries(primitives_2d_array)
-    values = primitives_2d_array.map {|i| "(#{i.map(&:to_s).join(',')})"}
-    ActiveRecord::Base.connection.execute(
-      "insert into uri_entries (machine_id, uri, hits, paper_trail_id)
-       values #{values.join(',')}"
+  def memoize_ip(ip)
+    return @ip_lookup_table[ip] if @ip_lookup_table.key? ip
+    @ip_lookup_table[ip] = Machine.find_or_create_by(ip: ip).id
+  end
+  
+  def mass_insert(primitive_2d_array)
+    UriEntry.import(
+      [:machine_id, :uri, :hits, :paper_trail_id],
+      primitive_2d_array
     )
   end
 end

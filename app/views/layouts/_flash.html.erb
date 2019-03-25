@@ -1,9 +1,15 @@
 <% flash.each do |k,v| %>
-  <% if v.is_a? Exception %>
-    <%= v %>
-  <% elsif v.is_a? DataLog %>
-    <%= v %>
-  <% else %>
-    <%= v %>
-  <% end %>
+  <div class="ui container">
+    <div class="ui message <%= k %>">
+      <% if v.instance_of? Array %>
+        <ul>
+          <% v.each do |element| %>
+            <li><%= element %></li>
+          <% end %>
+        </ul>
+      <% else %>
+        <%= v %>
+      <% end %>
+    </div>
+  </div>
 <% end %>

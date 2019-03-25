@@ -1,14 +1,15 @@
 <h1>All machines</h1>
+<h3>Total: <%= Machine.count %></h3>
 <%= link_to "Upload", machines_upload_path %>
 
-<table>
+<table class="ui striped celled table">
   <thead>
     <tr>
       <th>ID</th>
       <th>User</th>
       <th>Host</th>
       <th>IP</th>
-      <th>Was recorded on</th>
+      <th>Last day Carbon black saw this</th>
       <th>Was put into the database at</th>
       <th>Was last updated at</th>
     </tr>

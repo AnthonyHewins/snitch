@@ -33,6 +33,8 @@ GEM
       activemodel (= 5.2.2.1)
       activesupport (= 5.2.2.1)
       arel (>= 9.0)
+    activerecord-import (1.0.1)
+      activerecord (>= 3.2)
     activestorage (5.2.2.1)
       actionpack (= 5.2.2.1)
       activerecord (= 5.2.2.1)
@@ -164,9 +166,16 @@ GEM
     rspec-support (3.8.0)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
+    sass (3.7.3)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
     selenium-webdriver (3.141.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2, >= 1.2.2)
+    semantic-ui-sass (2.4.0.1)
+      sass (>= 3.2)
     shoulda-matchers (4.0.1)
       activesupport (>= 4.2.0)
     spring (2.0.2)
@@ -211,6 +220,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-import
   bcrypt_pbkdf
   bootsnap (>= 1.1.0)
   byebug
@@ -227,6 +237,7 @@ DEPENDENCIES
   rails (~> 5.2.2, >= 5.2.2.1)
   rspec-rails
   selenium-webdriver
+  semantic-ui-sass
   shoulda-matchers
   spring
   spring-watcher-listen (~> 2.0.0)

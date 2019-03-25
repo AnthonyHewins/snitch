@@ -44,7 +44,7 @@ class SftpClient
       # so the caller's logic can immediately go to the inductive case.
       files.length < 2 ? files : [files.inject(&block)]
     else
-      raise ArgumentError, "arity mismatch for supplied lambda (accepts 1-2 args)"
+      raise ArgumentError, "arity mismatch for supplied lambda (must accept 1-2 args)"
     end
   end
 

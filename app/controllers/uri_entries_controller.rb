@@ -4,7 +4,12 @@ require Rails.root.join 'lib/assets/log_parsers/cyber_adapt_log'
 
 class UriEntriesController < LogController
   def index
-    @uri_entries = UriEntry.all
+    query = params[:q]
+    if query.nil?
+      @uri_entries = UriEntry.last 200
+    else
+      @uri_entries = search(query).last 200
+    end
   end
 
   def insert_data
@@ -18,24 +23,26 @@ class UriEntriesController < LogController
   end
 
   private
+  def search(query)
+    UriEntry.left_outer_joins(:machine).left_outer_joins(:paper_trail)
+      .where <<-SQL, q: "%#{query}%"
+         TEXT(machines.ip) like :q or machines.host like :q or machines.user like :q
+         or uri like :q or TEXT(paper_trails.insertion_date) = :q
+      SQL
+  end
+    
   def open_sftp_and_upsert
-    date_range = dates_that_need_to_be_downloaded
-    flash[:info] = "Already up to date" if date_range.empty?
-    sftp = CyberAdaptSftpClient.new
-    date_range.map {|date| sftp_download_and_upsert sftp, date}
+    missing = CyberAdaptSftpClient.new.get_missing
+    return "Already up to date" if missing.empty?
+    missing.map {|file| upsert file}
   end
 
-  def dates_that_need_to_be_downloaded
-    next_date_needed = PaperTrail.select(:insertion_date).max.insertion_date + 1
-    (next_date_needed..Date.today).to_a
-  end
-
-  def sftp_download_and_upsert(sftp, date)
-    ActiveRecord::Base.logger = nil
-    byebug
-    file = sftp.pull date
-    return nil if file.nil?
-    log = CyberAdaptLog.create_from_timestamped_file file
-    "Upserted #{log.clean.size} and ran into #{log.dirty.size} errors"
+  def upsert(file)
+    if file.nil?
+      "File not found (if it's today's file, this means CyberAdapt hasn't made it yet)"
+    else
+      log = CyberAdaptLog.create_from_timestamped_file file
+      "#{log.filename}: upserted #{log.clean.size}, had #{log.dirty.size} errors"
+    end
   end
 end
