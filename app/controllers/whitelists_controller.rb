@@ -11,7 +11,7 @@ class WhitelistsController < ApplicationController
 
   # POST /whitelists/upload
   def insert_data
-    get_log Whitelist, redirect: whitelists_path
+    get_log WhitelistLog, redirect: whitelists_path
   end
 
   private

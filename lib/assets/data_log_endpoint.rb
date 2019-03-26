@@ -12,7 +12,7 @@ module DataLogEndpoint
   def get_log(log_class, redirect:)
     log, date_override = params[:log], params[:date_override]
     log = infer_how_to_insert log_class, log, date_override
-    flash[:info] = "#{log.filename}: upserted #{log.clean.size}, #{log.dirty.size} errors"
+    flash[:info] = "#{log.filename}: #{log.dirty.size} error(s)"
     redirect_to redirect
   end
 

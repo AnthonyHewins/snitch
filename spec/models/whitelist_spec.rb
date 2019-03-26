@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'whitelist'
 
 RSpec.describe Whitelist, type: :model do
@@ -6,6 +6,14 @@ RSpec.describe Whitelist, type: :model do
   
   before :each do
     @obj = create :whitelist
+  end
+
+  context 'after_save' do
+    it 'should delete any UriEntry that matches its regex_string' do
+      create :uri_entry, uri: "http://g123.com"
+      expect{@obj.update regex_string: "g[0-9]*.com"}
+        .to change{UriEntry.count}.from(1).to(0)
+    end
   end
   
   context '#regex' do
