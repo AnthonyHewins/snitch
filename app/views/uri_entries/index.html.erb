@@ -1,12 +1,9 @@
-<h1>CyberAdapt traffic</h1>
-<h3>Total: <%= UriEntry.count %></h3>
+<%= render 'shared/index_header',
+           title: "CyberAdapt traffic",
+           model: UriEntry,
+           var: @uri_entries %>
 
-<%= form_tag uri_entries_path, method: :get, class: "ui form" do |f| %>
-  <div class="ui icon input">
-    <%= text_field_tag :q, nil, placeholder: "Search" %>
-    <i class="search icon"></i>
-  </div>
-<% end %>
+<%= render 'shared/search', path: uri_entries_path %>
 
 <%= link_to "Pull new log entries from CyberAdapt", uri_entries_refresh_path %>
 

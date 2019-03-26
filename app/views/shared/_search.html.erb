@@ -1,0 +1,10 @@
+<%= form_tag path, method: :get, class: "ui form" do |f| %>
+  <div class="ui icon input">
+    <%= text_field_tag :q, params[:q], placeholder: "Search" %>
+    <i class="search icon"></i>
+  </div>
+  <div class="ui checkbox">
+    <%= check_box_tag :all, nil, params[:all] %>
+    <%= label_tag "Show me everything, even if it's slow" %>
+  </div>
+<% end %>

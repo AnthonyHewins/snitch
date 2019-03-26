@@ -10,6 +10,7 @@ gem 'therubyracer'
 gem 'pg'
 gem 'activerecord-import'
 gem 'semantic-ui-sass'
+gem 'jquery-rails'
 
 # For automatic SFTP downloads
 gem 'net-sftp'

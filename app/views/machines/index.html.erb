@@ -1,5 +1,10 @@
-<h1>All machines</h1>
-<h3>Total: <%= Machine.count %></h3>
+<%= render 'shared/index_header',
+           title: "Machines",
+           model: Machine,
+           var: @machines %>
+
+<%= render 'shared/search', path: machines_path %>
+
 <%= link_to "Upload", machines_upload_path %>
 
 <table class="ui striped celled table">

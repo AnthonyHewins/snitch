@@ -1,3 +1,8 @@
 Research
 ========================================================
 Jolene and Jennifer
+
+user to hostname mapping with static directory to pull down
+how long is CB data persisted in the cloud
+what's cyberadapts window for grabbing data
+make a release
