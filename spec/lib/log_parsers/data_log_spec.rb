@@ -12,10 +12,10 @@ RSpec.describe DataLog do
   end
 
   before :each do
-    @obj = DataLog.new(@path, false, nil, nil, nil) {|row| nil}
+    @obj = DataLog.new(@path, false, nil, nil) {|row| nil}
   end
 
-  subject {DataLog.new(@path, false, nil, nil, nil) {|row| nil}}
+  subject {DataLog.new(@path, false, nil, nil) {|row| nil}}
   it {should have_attr_reader :clean}
   it {should have_attr_reader :dirty}
   it {should have_attr_reader :filename}
@@ -254,25 +254,25 @@ RSpec.describe DataLog do
     context '#parse_timestamp_args' do
       it "returns PaperTrail.create(insertion_date: arg) if its a Date" do
         date = Date.today
-        expect(@obj.send :parse_timestamp_args, date, nil, CarbonBlackLog).to be_instance_of PaperTrail
+        expect(@obj.send :parse_timestamp_args, date, nil).to be_instance_of PaperTrail
       end
 
       it "returns PaperTrail.create(insertion_date: arg.to_date) if its a DateTime" do
         date = DateTime.now
-        expect(@obj.send :parse_timestamp_args, date, nil, CarbonBlackLog).to be_instance_of PaperTrail
+        expect(@obj.send :parse_timestamp_args, date, nil).to be_instance_of PaperTrail
       end
 
       it "returns the arg if it's a NilClass instance" do
-        expect(@obj.send :parse_timestamp_args, nil, nil, CarbonBlackLog).to eq nil
+        expect(@obj.send :parse_timestamp_args, nil, nil).to eq nil
       end
 
       it "returns the arg if it's a PaperTrail instance" do
         paper_trail = create :paper_trail
-        expect(@obj.send :parse_timestamp_args, paper_trail, nil, CarbonBlackLog).to eq paper_trail
+        expect(@obj.send :parse_timestamp_args, paper_trail, nil).to eq paper_trail
       end
 
       it 'raises a type error on anything else' do
-        expect{@obj.send :parse_timestamp_args, 1, nil, nil}.to raise_error TypeError
+        expect{@obj.send :parse_timestamp_args, 1, nil}.to raise_error TypeError
       end
     end
 
@@ -294,12 +294,12 @@ RSpec.describe DataLog do
       it 'finds a PaperTrail before creating it if matches exactly' do
         already_exists = create :paper_trail, filename: @obj.filename
         expect(
-          @obj.send(:find_or_create_paper_trail, already_exists.insertion_date, already_exists.log_type)
+          @obj.send(:find_or_create_paper_trail, already_exists.insertion_date)
         ).to eq already_exists
       end
 
       it 'creates the PaperTrail if it doesnt exist' do
-        expect{@obj.send(:find_or_create_paper_trail, Date.today, CyberAdaptLog)}
+        expect{@obj.send(:find_or_create_paper_trail, Date.today)}
           .to change{PaperTrail.count}.by 1
       end
     end

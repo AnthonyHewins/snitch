@@ -1,4 +1,4 @@
-require_relative './data_log'
+require_relative 'data_log'
 require Rails.root.join 'app/models/uri_entry'
 require Rails.root.join 'app/models/whitelist'
 require Rails.root.join 'app/models/machine'
@@ -10,7 +10,7 @@ class CyberAdaptLog < DataLog
 
   def initialize(file, date_override: nil, regex: nil)
     init_vars_before_super
-    super(file, false, date_override, regex, CyberAdaptLog) {|row| parse_row(row)}
+    super(file, false, date_override, regex) {|row| parse_row(row)}
     mass_insert @clean
   end
 

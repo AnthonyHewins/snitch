@@ -1,25 +1,6 @@
-<%= render 'shared/index_header',
-           title: "Whitelist",
+<%= render 'shared/index',
            model: Whitelist,
-           var: @whitelists %>
-
-<%= render 'shared/search', path: whitelists_path %>
-
-<table class="ui striped celled table">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Regular expression</th>
-      <th>This was created at</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @whitelists.each do |row| %>
-      <tr>
-        <%= content_tag :td, row.id %>
-        <%= content_tag :td, row.regex_string %>
-        <%= content_tag :td, row.paper_trail&.insertion_date %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+           var: @whitelists,
+           html_path: whitelists_path,
+           csv_path: whitelists_path(q: params[:q], all: true, format: :csv),
+           th: ["ID", "Ruby regex", "Was created on"] %>

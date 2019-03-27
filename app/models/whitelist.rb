@@ -1,6 +1,12 @@
 require_relative './application_record'
 
 class Whitelist < ApplicationRecord
+  CsvColumns = [
+    :id,
+    :regex_string,
+    proc {|record| record.paper_trail&.insertion_date}
+  ]
+
   belongs_to :paper_trail, optional: true
 
   after_save do |record|
@@ -16,5 +22,9 @@ class Whitelist < ApplicationRecord
   def regex_string=(new_string)
     @regex_obj = Regexp.new new_string
     super new_string
+  end
+
+  def to_a(*cols)
+    cols.empty? ? super(*CsvColumns) : super(*cols)
   end
 end

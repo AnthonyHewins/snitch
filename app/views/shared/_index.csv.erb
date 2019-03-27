@@ -1,0 +1,4 @@
+<%= csv =  CSV.generate do |csv| -%>
+  <% csv << header %>
+  <% collection.map(&:to_a).each {|record| csv << record} %>
+<%- end -%>

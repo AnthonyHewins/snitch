@@ -1,4 +1,4 @@
-require_relative './data_log'
+require_relative 'data_log'
 require Rails.root.join 'app/models/machine'
 
 class CarbonBlackLog < DataLog
@@ -7,7 +7,7 @@ class CarbonBlackLog < DataLog
   GLOB_FORMAT = "device_status_[0-9\-]*.csv"
 
   def initialize(file, date_override: nil, regex: nil)
-    super(file, true, date_override, regex, CarbonBlackLog) {|row| parse_row(row)}
+    super(file, true, date_override, regex) {|row| parse_row(row)}
   end
 
   def self.create_from_timestamped_file(file)

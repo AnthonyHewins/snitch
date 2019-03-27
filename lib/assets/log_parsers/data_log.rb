@@ -6,9 +6,9 @@ require_relative '../sftp/sftp_file'
 class DataLog
   attr_reader :clean, :dirty, :filename, :date_override
   
-  def initialize(csv, headers, date_override, timestamp_regex, type, &block)
+  def initialize(csv, headers, date_override, timestamp_regex, &block)
     csv = parse_csv csv, headers
-    @date_override = parse_timestamp_args date_override, timestamp_regex, type
+    @date_override = parse_timestamp_args date_override, timestamp_regex
     read csv, &block
   end
 
@@ -55,13 +55,13 @@ class DataLog
     csv.map(&block)
   end
 
-  def parse_timestamp_args(date_override, regex, type)
+  def parse_timestamp_args(date_override, regex)
     date = decide_on_timestamp(date_override, regex)
     case date
     when Date
-      find_or_create_paper_trail date, type
+      find_or_create_paper_trail date
     when DateTime
-      find_or_create_paper_trail date.to_date, type
+      find_or_create_paper_trail date.to_date
     when PaperTrail, NilClass
       date
     else
@@ -74,11 +74,10 @@ class DataLog
     regex.nil? ? nil : Date.parse(regex.match(@filename).to_s)
   end
   
-  def find_or_create_paper_trail(insertion_date, type)
+  def find_or_create_paper_trail(insertion_date)
     PaperTrail.find_or_create_by(
       insertion_date: insertion_date,
       filename: @filename,
-      log_type: type.to_s
     )
   end
 end

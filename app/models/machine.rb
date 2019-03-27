@@ -1,6 +1,16 @@
 require_relative './application_record'
 
 class Machine < ApplicationRecord
+  CsvColumns = [
+    :id,
+    :user,
+    :host,
+    :ip,
+    lambda {|machine| machine.paper_trail&.insertion_date},
+    :created_at,
+    :updated_at
+  ]
+
   has_many :uri_entries
   belongs_to :paper_trail, optional: true
 
@@ -18,5 +28,9 @@ class Machine < ApplicationRecord
 
   validate do |record|
     errors.add(:ip, "is not a valid IP address") if record.ip.nil?
+  end
+
+  def to_a(*cols)
+    cols.empty? ? super(*CsvColumns) : super(*cols)
   end
 end

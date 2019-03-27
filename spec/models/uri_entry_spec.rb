@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'uri_entry'
 
 RSpec.describe UriEntry, type: :model do
   before :each do
@@ -24,7 +25,7 @@ RSpec.describe UriEntry, type: :model do
 
   context ':uri' do
     it "allow anything in FFaker::Internet.uri('http'), so any http URI" do
-      expect(build :uri_entry).to be_valid # FactoryBot + FFaker does this already
+      expect(create :uri_entry).to be_valid # FactoryBot + FFaker does this already
     end
 
     it "shouldn't allow anything not matching URI::regexp" do
@@ -49,6 +50,22 @@ RSpec.describe UriEntry, type: :model do
     end
   end
 
+  context '#to_a' do
+    it 'maps each element in CsvColumns to make the machine ready for CSV output' do
+      expect(@obj.to_a).to eq([
+                                @obj.id,
+                                @obj.machine.ip,
+                                @obj.machine.user,
+                                @obj.machine.host,
+                                @obj.uri,
+                                @obj.hits,
+                                @obj.paper_trail&.insertion_date,
+                                @obj.created_at,
+                                @obj.updated_at
+                              ])
+    end
+  end
+  
   context '::[]' do
     context 'on Integer input' do
       it 'finds the history with machine_id == arg when it exists' do

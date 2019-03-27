@@ -8,6 +8,7 @@ class UriEntriesController < ApplicationController
   
   def index
     @uri_entries = filter UriEntry, search_fn: lambda {|x| search x}
+    respond @uri_entries
   end
 
   def pull_from_cyberadapt

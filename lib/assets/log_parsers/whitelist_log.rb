@@ -6,7 +6,7 @@ class WhitelistLog < DataLog
   GLOB_FORMAT = 'whitelist_log_[0-9]*.csv'
 
   def initialize(file, date_override: nil, regex: nil)
-    super(file, true, date_override, regex, WhitelistLog) {|row| parse_row(row)}
+    super(file, true, date_override, regex) {|row| parse_row(row)}
   end
 
   def self.create_from_timestamped_file(file)
@@ -16,7 +16,8 @@ class WhitelistLog < DataLog
   private
   def parse_row(row)
     begin
-      Whitelist.find_or_create_by regex_string: Regexp.new(row['regex_string']).to_s
+      wl = Whitelist.find_or_create_by regex_string: Regexp.new(row['regex_string']).to_s
+      wl.update paper_trail: @date_override
     rescue Exception => e
       row['error'] = e
       @dirty << row

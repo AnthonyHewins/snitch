@@ -1,5 +1,5 @@
-require_relative './data_log'
-require_relative Rails.root.join 'app/models/machine'
+require_relative 'data_log'
+require 'machine'
 
 class UserLog < DataLog
   TIMESTAMP = /[0-9]+/
@@ -7,7 +7,7 @@ class UserLog < DataLog
   GLOB_FORMAT = 'inventory_[0-9]*.csv'
 
   def initialize(file, date_override: nil, regex: nil)
-    super(file, true, date_override, regex, UserLog) {|row| parse_row(row)}
+    super(file, true, date_override, regex) {|row| parse_row(row)}
   end
 
   def self.create_from_timestamped_file(file)

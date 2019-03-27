@@ -7,6 +7,7 @@ class MachinesController < ApplicationController
   
   def index
     @machines = filter Machine, search_fn: lambda {|x| search x}
+    respond @machines
   end
 
   # POST /machines/upload

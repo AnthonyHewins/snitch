@@ -28,4 +28,14 @@ RSpec.describe Whitelist, type: :model do
       expect(@obj.regex).to eq Regexp.new("new")
     end
   end
+
+  context '#to_a' do
+    it 'maps each element in CsvColumns to make the machine ready for CSV output' do
+      expect(@obj.to_a).to eq([
+                                @obj.id,
+                                @obj.regex_string,
+                                @obj.paper_trail&.insertion_date,
+                              ])
+    end
+  end
 end

@@ -7,6 +7,7 @@ class WhitelistsController < ApplicationController
   
   def index
     @whitelists = filter Whitelist, search_fn: lambda {|x| search x}
+    respond @whitelists
   end
 
   # POST /whitelists/upload

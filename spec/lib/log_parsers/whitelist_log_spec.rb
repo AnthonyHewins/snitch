@@ -14,15 +14,22 @@ RSpec.describe WhitelistLog do
   before :each do
     @obj = WhitelistLog.new(@filename)
   end
-  
+
   it 'inherits from DataLog' do
     expect(WhitelistLog).to be < DataLog
   end
 
   context 'private:' do
     context '#parse_row(row)' do
-      it 'returns the Whitelist entry if it succeeds in insertion' do
-        expect(@obj.send :parse_row, {'regex_string' => @regex}).to be_instance_of Whitelist
+      it 'sets the whitelists paper_trail to @date_override' do
+        paper_trail = create :paper_trail
+        @obj.instance_variable_set :@date_override, paper_trail
+        @obj.send :parse_row, {'regex_string' => @regex}
+        expect(Whitelist.first.paper_trail).to eq paper_trail
+      end
+
+      it 'returns the Whitelist entry if it succeeds in updating' do
+        expect(@obj.send :parse_row, {'regex_string' => @regex}).to be true
       end
 
       it 'creates the whitelist element if the regex is valid' do

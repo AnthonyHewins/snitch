@@ -5,6 +5,18 @@ require 'ipaddr'
 require_relative './application_record'
 
 class UriEntry < ApplicationRecord
+  CsvColumns = [
+    :id,
+    proc {|record| record.machine.ip},
+    proc {|record| record.machine.user},
+    proc {|record| record.machine.host},
+    :uri,
+    :hits,
+    proc {|record| record.paper_trail&.insertion_date},
+    :created_at,
+    :updated_at
+  ]
+
   belongs_to :machine
   belongs_to :paper_trail, optional: true
 
@@ -20,6 +32,10 @@ class UriEntry < ApplicationRecord
     super(*args)
   end
 
+  def to_a(*cols)
+    cols.empty? ? super(*CsvColumns) : super(*cols)
+  end
+  
   def self.[](machine)
     case machine
     when Integer
