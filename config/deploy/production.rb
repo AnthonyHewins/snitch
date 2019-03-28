@@ -11,7 +11,7 @@ server 'fpinv-lfs1001', roles: [:app, :web, :db], user: "flexibleplan"
 
 namespace :deploy do
   after :finishing do
-    sh "bash new_release"
+    sh "ssh-server-flexibleplan bash ~/var/www/snitch/new_release.sh"
   end
 end
 # role-based syntax
