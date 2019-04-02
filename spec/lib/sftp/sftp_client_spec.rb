@@ -15,13 +15,13 @@ RSpec.describe SftpClient do
     @obj = SftpClient.new('test.rebex.net', 'demo', password: 'password')
   end
 
-  context '#pull(arg=nil, dir=".", &proc_filter)' do
+  context '#pull(opts={}, &proc_filter)' do
     it "downloads a files from test.rebex.net matching /[a-z]*.txt/ (should be a readme)" do
       test_file = SftpFile.new(
         filename: "readme.txt",
         text: File.read(Rails.root.join 'spec/fixtures/readme.txt')
       )
-      expect(@obj.pull(/[a-z]*.txt/i)).to eq test_file
+      expect(@obj.pull(name: /[a-z]*.txt/i)).to eq test_file
     end
   end
 

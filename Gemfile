@@ -11,6 +11,7 @@ gem 'pg'
 gem 'activerecord-import'
 gem 'semantic-ui-sass'
 gem 'jquery-rails'
+gem 'viewpoint'
 
 # For automatic SFTP downloads
 gem 'net-sftp'

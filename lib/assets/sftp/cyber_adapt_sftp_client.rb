@@ -1,29 +1,29 @@
 require 'date'
 
 require_relative './sftp_client'
-require_relative '../log_parsers/cyber_adapt_log'
 
 class CyberAdaptSftpClient < SftpClient
   FIRST_DAY_OF_TRACKING = Date.new(2018, 10, 19)
-  
+  ENDPOINT = 'remote.cyberadapt.com'
+  USER = 'flexplan'
+
   def initialize(host=nil, user=nil, opts={})
-    super(
-      host || 'remote.cyberadapt.com',
-      user || 'flexplan',
-      {port: 2222}.merge(opts)
-    )
+    opts[:port] = 2222 unless opts.key? :port
+    super(host || ENDPOINT, user || USER, opts)
   end
 
-  def pull(arg, dir='.', &proc_filter)
+  def pull(arg, &proc_filter)
     case arg
     when Date
       date_check arg
-      super(to_timestamped_filename(arg), dir, &proc_filter)
+      super(name: to_timestamped_filename(arg), &proc_filter)
     when Range
       date_check arg.first, arg.last
-      arg.map {|date| super(to_timestamped_filename(arg), dir, &proc_filter)}
+      arg.map {|date| super(name: to_timestamped_filename(arg), &proc_filter)}
+    when String
+      super(name: arg, &proc_filter)
     else
-      super(arg, dir, &proc_filter)
+      super(arg, &proc_filter)
     end
   end
 

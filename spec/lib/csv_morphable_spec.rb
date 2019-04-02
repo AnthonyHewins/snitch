@@ -13,12 +13,14 @@ RSpec.describe CsvMorphable do
       expect(@obj.to_a proc {|i| i.object_id}).to eq [@obj.object_id]
     end
 
-    it 'on an Array with Symbol elements it maps the Symbol to self' do
-      expect(@obj.to_a :object_id).to eq [@obj.object_id]
+    ['object_id', :object_id].each do |sendable|
+      it "on an Array with #{sendable.class} elements it maps the Symbol to self" do
+        expect(@obj.to_a sendable).to eq [@obj.object_id]
+      end
     end
 
-    it 'throws ArgumentError on all other types' do
-      expect{@obj.to_a 1}.to raise_error ArgumentError
+    it 'throws TypeError on all other types' do
+      expect{@obj.to_a 1}.to raise_error TypeError
     end
   end
 end
