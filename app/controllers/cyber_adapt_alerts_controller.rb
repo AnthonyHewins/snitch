@@ -9,7 +9,7 @@ require Rails.root.join 'lib/assets/reportable_endpoint'
 class CyberAdaptAlertsController < ApplicationController
   include ReportableEndpoint
 
-  before_action :set_alert, only: %i(set_resolved show)
+  before_action :set_alert, only: %i(set_resolved show edit update)
   
   def index
     @alerts = filter(CyberAdaptAlert, search_fn: lambda {|x| search x})
@@ -20,13 +20,13 @@ class CyberAdaptAlertsController < ApplicationController
   def show
   end
 
+  def edit
+  end
+  
   def update
-  end
-
-  def new
-  end
-
-  def create
+    @alert.update alert_params
+    flash[:info] = "Updated CyberAdapt alert ##{@alert.alert_id}"
+    redirect_to cyber_adapt_alert_path(@alert)
   end
 
   def set_resolved
@@ -45,6 +45,10 @@ class CyberAdaptAlertsController < ApplicationController
   private
   def set_alert
     @alert = CyberAdaptAlert.find params[:id]
+  end
+
+  def alert_params
+    params.require(:cyber_adapt_alert).permit(:comment, :resolved)
   end
   
   def search(query)

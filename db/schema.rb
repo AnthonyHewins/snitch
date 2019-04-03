@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_02_184155) do
+ActiveRecord::Schema.define(version: 2019_04_03_203352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,12 +27,20 @@ ActiveRecord::Schema.define(version: 2019_04_02_184155) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "resolved", default: false
+    t.text "comment"
+  end
+
+  create_table "dhcp_lease", force: :cascade do |t|
+    t.bigint "machines_id", null: false
+    t.bigint "paper_trails_id", null: false
+    t.inet "ip", null: false
+    t.index ["machines_id"], name: "index_dhcp_lease_on_machines_id"
+    t.index ["paper_trails_id"], name: "index_dhcp_lease_on_paper_trails_id"
   end
 
   create_table "machines", force: :cascade do |t|
     t.string "user"
     t.string "host"
-    t.inet "ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "paper_trail_id"
@@ -47,13 +55,11 @@ ActiveRecord::Schema.define(version: 2019_04_02_184155) do
   end
 
   create_table "uri_entries", force: :cascade do |t|
-    t.bigint "machine_id"
     t.string "uri"
     t.integer "hits"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "paper_trail_id"
-    t.index ["machine_id"], name: "index_uri_entries_on_machine_id"
     t.index ["paper_trail_id"], name: "index_uri_entries_on_paper_trail_id"
   end
 

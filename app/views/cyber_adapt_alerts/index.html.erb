@@ -16,10 +16,8 @@
       <th>ID</th>
       <th>Alert ID</th>
       <th>Message</th>
-      <th>Source IP</th>
-      <th>Source Port</th>
-      <th>Destination IP</th>
-      <th>Destination Port</th>
+      <th>Source</th>
+      <th>Destination</th>
       <th>Timestamp</th>
       <th>Resolved?</th>
     </tr>
@@ -30,10 +28,8 @@
         <td><%= link_to record.id, cyber_adapt_alert_path(record) %></td>
         <td><%= record.alert_id %></td>
         <td><%= record.msg %></td>
-        <td><%= record.src_ip %></td>
-        <td><%= record.src_port %></td>
-        <td><%= record.dst_ip %></td>
-        <td><%= record.dst_port %></td>
+        <td><%= abuse_ip record.src_ip %>:<%= record.src_port %></td>
+        <td><%= abuse_ip record.dst_ip %>:<%= record.dst_port %></td>
         <td><%= record.alert_timestamp %></td>
         <td><%= resolve_icon record %></td>
       </tr>

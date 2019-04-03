@@ -3,15 +3,19 @@
     CyberAdapt Alert #<%= @alert.alert_id %>
   </h1>
 
+  <%= link_to "Edit", edit_cyber_adapt_alert_path(@alert) %>
+  
   <div class="ui items">
     <div class="item">
-      <% if @alert.resolved? %>
-        <%= resolve_icon(@alert) %>
-        This alert is resolved. Click icon to unresolve.
-      <% else %>
-        <%= resolve_icon(@alert)%>
-        This alert is unresolved. Click icon to resolve.
-      <% end %>
+      <div class="content">
+        <div class="header">
+          <%= resolve_icon(@alert) %>
+          <%= @alert.resolved ? "Resolved" : "Unresolved" %>
+        </div>
+        <div class="meta">
+          <span>Click the icon to reverse.</span>
+        </div>
+      </div>
     </div>
 
     <div class="item">
@@ -68,6 +72,21 @@
         </div>
         <div class="description">
           <%= @alert.alert_timestamp %>
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="content">
+        <div class="header">
+          <i class="purple edit icon"></i>Comment
+        </div>
+        <div class="description">
+          <% if @alert.comment.blank? %>
+            <i>No comment</i>
+          <% else %>
+            <%= @alert.comment %>
+          <% end %>
         </div>
       </div>
     </div>

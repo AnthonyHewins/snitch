@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   resources :whitelists, only: [:index]
   resources :uri_entries, only: [:index]
   resources :machines, only: [:index]
-  resources :cyber_adapt_alerts do
+  resources :cyber_adapt_alerts, except: %i(new create) do
     get 'set_resolved', on: :member
   end
 
