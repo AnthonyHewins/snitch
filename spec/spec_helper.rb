@@ -1,6 +1,8 @@
 require 'bundler/setup'
 Bundler.require :test, :default
 
+Rails.env = 'test'
+
 dir = Dir.glob(File.expand_path File.join(__FILE__, '../custom/matchers/*'))
 dir.each {|f| require f}
 
