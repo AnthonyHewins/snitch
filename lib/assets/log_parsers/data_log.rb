@@ -20,7 +20,7 @@ class DataLog
   def self.create_from_timestamped_file
     raise NotImplementedError
   end
-  
+
   private
   def parse_csv(arg, headers)
     case arg
@@ -62,7 +62,7 @@ class DataLog
       find_or_create_paper_trail date
     when DateTime
       find_or_create_paper_trail date.to_date
-    when PaperTrail, NilClass
+    when PaperTrail
       date
     else
       raise TypeError, "date_override must be a Date or PaperTrail, got #{date.class}"
@@ -71,7 +71,8 @@ class DataLog
 
   def decide_on_timestamp(date_override, regex)
     return date_override unless date_override.nil?
-    regex.nil? ? nil : Date.parse(regex.match(@filename).to_s)
+    return Date.parse(regex.match(@filename).to_s) unless regex.nil?
+    raise ArgumentError, "must pass date_override or imply it within filename"
   end
   
   def find_or_create_paper_trail(insertion_date)

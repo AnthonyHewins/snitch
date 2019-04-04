@@ -12,7 +12,7 @@ RSpec.describe WhitelistLog do
   end
 
   before :each do
-    @obj = WhitelistLog.new(@filename)
+    @obj = WhitelistLog.new @filename, date_override: FFaker::Time.date
   end
 
   it 'inherits from DataLog' do

@@ -11,7 +11,7 @@ RSpec.describe CyberAdaptLog do
   end
 
   before :each do
-    @obj = CyberAdaptLog.new @filename
+    @obj = CyberAdaptLog.new @filename, date_override: FFaker::Time.date
   end
 
   it 'inherits from DataLog' do
@@ -31,7 +31,8 @@ RSpec.describe CyberAdaptLog do
   context '#initialize' do
     context 'reads in the CSV given with filename and' do
       it 'creates a UriEntry from the row when there are no problems' do
-        expect{CyberAdaptLog.new @filename}.to change{UriEntry.count}.by 1
+        expect{CyberAdaptLog.new @filename, date_override: FFaker::Time.date}
+          .to change{UriEntry.count}.by 1
       end
 
       it 'files the UriEntry into @dirty if it has errors' do
@@ -39,7 +40,9 @@ RSpec.describe CyberAdaptLog do
         file_with_errors = @filename + 'dirty'
         CSV.open(file_with_errors, 'wb') {|csv| csv << [@ip, @uri, 'asd']}
 
-        expect(CyberAdaptLog.new(file_with_errors).dirty.size).to eq 1
+        obj = CyberAdaptLog.new file_with_errors, date_override: FFaker::Time.date
+
+        expect(obj.dirty.size).to eq 1
       end
 
       it 'files the UriEntry into @clean if it has no errors' do
@@ -48,7 +51,7 @@ RSpec.describe CyberAdaptLog do
 
       it 'skips the entry if theres a regex in the whitelist matching it' do
         create :whitelist, regex_string: @uri
-        obj = CyberAdaptLog.new @filename
+        obj = CyberAdaptLog.new @filename, date_override: FFaker::Time.date
         expect(obj.clean.size + obj.dirty.size).to eq 0
       end
     end

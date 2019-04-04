@@ -10,7 +10,7 @@ RSpec.describe UserLog do
   end
   
   before :each do
-    @obj = UserLog.new @filename
+    @obj = UserLog.new @filename, date_override: FFaker::Time.date
   end
  
   context '#parse_row' do
@@ -33,9 +33,8 @@ RSpec.describe UserLog do
       end
 
       it 'it updates the paper trail' do
-        @machine.update paper_trail: create(:paper_trail)
         @obj.send(:parse_row, @row)
-        expect(@machine.reload.paper_trail).to be nil
+        expect(@machine.reload.paper_trail).to eq @obj.date_override
       end
 
       it 'it updates the machine user' do

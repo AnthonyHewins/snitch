@@ -2,7 +2,7 @@ require_relative 'data_log'
 require Rails.root.join 'app/models/machine'
 
 class CarbonBlackLog < DataLog
-  TIMESTAMP = "[0-9\-]+"
+  TIMESTAMP = /[0-9\-]+/
   FORMAT = /device_status_#{TIMESTAMP}.csv/
   GLOB_FORMAT = "device_status_[0-9\-]*.csv"
 

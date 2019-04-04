@@ -12,10 +12,10 @@ RSpec.describe DataLog do
   end
 
   before :each do
-    @obj = DataLog.new(@path, false, nil, nil) {|row| nil}
+    @obj = DataLog.new(@path, false, FFaker::Time.date, nil) {|row| nil}
   end
 
-  subject {DataLog.new(@path, false, nil, nil) {|row| nil}}
+  subject {DataLog.new(@path, false, FFaker::Time.date, nil) {|row| nil}}
   it {should have_attr_reader :clean}
   it {should have_attr_reader :dirty}
   it {should have_attr_reader :filename}
@@ -253,17 +253,13 @@ RSpec.describe DataLog do
 
     context '#parse_timestamp_args' do
       it "returns PaperTrail.create(insertion_date: arg) if its a Date" do
-        date = Date.today
-        expect(@obj.send :parse_timestamp_args, date, nil).to be_instance_of PaperTrail
+        expect(@obj.send :parse_timestamp_args, Date.today, nil)
+          .to be_instance_of PaperTrail
       end
 
       it "returns PaperTrail.create(insertion_date: arg.to_date) if its a DateTime" do
-        date = DateTime.now
-        expect(@obj.send :parse_timestamp_args, date, nil).to be_instance_of PaperTrail
-      end
-
-      it "returns the arg if it's a NilClass instance" do
-        expect(@obj.send :parse_timestamp_args, nil, nil).to eq nil
+        expect(@obj.send :parse_timestamp_args, DateTime.now, nil)
+          .to be_instance_of PaperTrail
       end
 
       it "returns the arg if it's a PaperTrail instance" do
@@ -281,8 +277,8 @@ RSpec.describe DataLog do
         expect(@obj.send :decide_on_timestamp, 1, 2).to eq 1
       end
 
-      it 'returns nil if both args are nil' do
-        expect(@obj.send :decide_on_timestamp, nil, nil).to be nil
+      it 'raises ArgumentError if both args are nil' do
+        expect{@obj.send :decide_on_timestamp, nil, nil}.to raise_error ArgumentError
       end
 
       it 'uses regex to parse the filename for a timestamp otherwise' do
