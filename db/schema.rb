@@ -30,17 +30,10 @@ ActiveRecord::Schema.define(version: 2019_04_03_203352) do
     t.text "comment"
   end
 
-  create_table "dhcp_lease", force: :cascade do |t|
-    t.bigint "machines_id", null: false
-    t.bigint "paper_trails_id", null: false
-    t.inet "ip", null: false
-    t.index ["machines_id"], name: "index_dhcp_lease_on_machines_id"
-    t.index ["paper_trails_id"], name: "index_dhcp_lease_on_paper_trails_id"
-  end
-
   create_table "machines", force: :cascade do |t|
     t.string "user"
     t.string "host"
+    t.inet "ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "paper_trail_id"
@@ -60,7 +53,9 @@ ActiveRecord::Schema.define(version: 2019_04_03_203352) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "paper_trail_id"
+    t.bigint "machine_id"
     t.index ["paper_trail_id"], name: "index_uri_entries_on_paper_trail_id"
+    t.index ["machine_id"], name: "index_uri_entries_on_machine_id"
   end
 
   create_table "whitelists", force: :cascade do |t|
