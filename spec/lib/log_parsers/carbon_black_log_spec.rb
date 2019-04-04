@@ -27,18 +27,17 @@ RSpec.describe CarbonBlackLog do
   end
 
   context 'private:' do
+    before :each do
+      @machine = create :machine
+      @hash = {'lastInternalIpAddress' => @ip, 'name' => FFaker::Lorem.word}
+    end
+
     context '#parse_row(row)' do
       it 'raises a NoMethodError unless row.respond_to? #[]' do
         expect{@obj.send :parse_row, Object.new}.to raise_error NoMethodError
       end
 
       context 'on good data' do
-        before :each do
-          Machine.delete_all
-          @machine = create :machine, ip: @ip
-          @hash = {'lastInternalIpAddress' => @ip, 'name' => FFaker::Lorem.word}
-        end
-
         context 'and in the DB already' do
           it 'uses the old instance if a machine exists with the IP from the file' do
             expect{@obj.send :parse_row, @hash}.not_to change{Machine.count}
@@ -72,6 +71,39 @@ RSpec.describe CarbonBlackLog do
         @obj.send :parse_row, {'lastInternalIpAddress' => '1-', 'name': 'a'}
         expect(@obj.dirty.size).to eq 1
       end
+    end
+
+    context '#upsert_dhcp_history(ip, machine)' do
+      it 'creates a DhcpLease if it doesnt find one' do
+        expect{@obj.send :upsert_dhcp_history, @ip, @machine}
+          .to change{DhcpLease.count}.from(0).to(1)
+      end
+
+      context 'when a lease is found' do
+        before :each do
+          @lease = create(
+            :dhcp_lease,
+            ip: @ip,
+            paper_trail: create(
+              :paper_trail,
+              insertion_date: @obj.date_override.insertion_date
+            )
+          )
+          @obj.send :upsert_dhcp_history, @ip, @machine
+        end
+        
+        it 'updates the leases machine FK to the machine being inserted' do
+          expect(@lease.machine).to eq @machine
+        end
+
+        it 'updates the paper_trail to the machines paper_trail' do
+          expect(@lease.paper_trail).to eq @obj.date_override
+        end
+      end
+    end
+
+    context '#past_history_for_dhcp_leases(ip)' do
+
     end
   end
 end

@@ -2,9 +2,7 @@ require 'rails_helper'
 require 'machine'
 
 RSpec.describe Machine, type: :model do
-  it {should have_many :uri_entries}
   it {should belong_to(:paper_trail).required(false)}
-  it {should validate_uniqueness_of(:ip).ignoring_case_sensitivity}
   it {should validate_uniqueness_of(:user).case_insensitive.allow_nil}
   it {should validate_uniqueness_of(:host).case_insensitive.allow_nil}
 
@@ -25,13 +23,18 @@ RSpec.describe Machine, type: :model do
     end
   end
 
+  context '#ip' do
+    it 'returns the most recent IP that the database is aware of' do
+      expect(@obj.ip).to eq DhcpLease.select(:ip).find_by(machine: @obj).limit 1
+    end
+  end
+  
   context '#to_a' do
     it 'maps each element in CsvColumns to make the machine ready for CSV output' do
       expect(@obj.to_a).to eq([
                                 @obj.id,
                                 @obj.user,
                                 @obj.host,
-                                @obj.ip,
                                 @obj.paper_trail&.insertion_date,
                                 @obj.created_at,
                                 @obj.updated_at

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :dhcp_leases
   get 'drligma' => 'static#drligma'
   
   %i(machines uri_entries users whitelists).each do |i|

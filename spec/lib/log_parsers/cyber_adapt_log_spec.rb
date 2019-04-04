@@ -141,10 +141,10 @@ RSpec.describe CyberAdaptLog do
     
     context '#mass_insert' do
       it 'inserts a UriEntry array in the most low-level way possible for speed' do
-        dummy_machine, dummy_paper_trail = create(:machine).id, create(:paper_trail).id
+        dummy_paper_trail = create(:paper_trail).id
         two_records = [
-          [dummy_machine, @uri, 1, dummy_paper_trail],
-          [dummy_machine, @uri, 1, dummy_paper_trail],
+          [@uri, 1, dummy_paper_trail],
+          [@uri, 1, dummy_paper_trail],
         ]
         expect{@obj.send :mass_insert, two_records}.to change{UriEntry.count}.by(2)
       end

@@ -11,10 +11,8 @@ class Machine < ApplicationRecord
     :updated_at
   ]
 
-  has_many :uri_entries
   belongs_to :paper_trail, optional: true
 
-  validates_uniqueness_of :ip
   validates_uniqueness_of :user, allow_nil: true, case_sensitive: false
   validates_uniqueness_of :host, allow_nil: true, case_sensitive: false
 
@@ -26,10 +24,22 @@ class Machine < ApplicationRecord
     end
   end
 
-  validate do |record|
-    errors.add(:ip, "is not a valid IP address") if record.ip.nil?
+  def ip(date=nil)
+    case date
+    when NilClass
+      DhcpLease.pluck(:ip).find_by(machine: self).last
+    when DateTime, Date
+      DhcpLease.pluck(:ip).left_outer_joins(:paper_trails)
+        .where <<-SQL, m_id: id, date: date
+          machines.id = :m_id and paper_trails.insertion_date = :date
+        SQL
+    when PaperTrail
+      DhcpLease.select(:ip).where(machine: self, paper_trail: date)
+    else
+      raise TypeError
+    end
   end
-
+  
   def to_a(*cols)
     cols.empty? ? super(*CsvColumns) : super(*cols)
   end

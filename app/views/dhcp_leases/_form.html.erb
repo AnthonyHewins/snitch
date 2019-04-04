@@ -1,0 +1,32 @@
+<%= form_with(model: dhcp_lease, local: true) do |form| %>
+  <% if dhcp_lease.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(dhcp_lease.errors.count, "error") %> prohibited this dhcp_lease from being saved:</h2>
+
+      <ul>
+      <% dhcp_lease.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :inet %>
+    <%= form.text_field :inet %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reference %>
+    <%= form.text_field :reference %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reference %>
+    <%= form.text_field :reference %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

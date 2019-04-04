@@ -64,7 +64,7 @@ class CyberAdaptLog < DataLog
   
   def mass_insert(primitive_2d_array)
     UriEntry.import(
-      [:machine_id, :uri, :hits, :paper_trail_id],
+      [:uri, :hits, :paper_trail_id],
       primitive_2d_array
     )
   end

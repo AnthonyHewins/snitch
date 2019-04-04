@@ -6,7 +6,6 @@ RSpec.describe UriEntry, type: :model do
     @obj = create :uri_entry
   end
   
-  it {should belong_to :machine}
   it {should belong_to(:paper_trail).required(false)}
 
   context ':hits' do
@@ -65,7 +64,13 @@ RSpec.describe UriEntry, type: :model do
                               ])
     end
   end
-  
+
+  context '#machine' do
+    it 'returns the machine tied to :dhcp_lease' do
+      expect(@obj.machine).to eq Machine.find @obj.dhcp_lease.machine_id
+    end
+  end
+
   context '::[]' do
     context 'on Integer input' do
       it 'finds the history with machine_id == arg when it exists' do

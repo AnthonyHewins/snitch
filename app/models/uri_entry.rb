@@ -1,13 +1,12 @@
 require 'uri'
-require 'date'
-require 'ipaddr'
 
-require_relative './application_record'
+require 'application_record'
+require 'machine'
 
 class UriEntry < ApplicationRecord
   CsvColumns = [
     :id,
-    proc {|record| record.machine.ip},
+    proc {|record| record.dhcp_lease.ip},
     proc {|record| record.machine.user},
     proc {|record| record.machine.host},
     :uri,
@@ -17,7 +16,7 @@ class UriEntry < ApplicationRecord
     :updated_at
   ]
 
-  belongs_to :machine
+  has_one :dhcp_lease, required: true, dependent: :destroy
   belongs_to :paper_trail, optional: true
 
   validates :uri, format: {with: URI::regexp}
@@ -35,6 +34,10 @@ class UriEntry < ApplicationRecord
   def to_a(*cols)
     cols.empty? ? super(*CsvColumns) : super(*cols)
   end
+
+  def machine
+    dhcp_lease.machine
+  end
   
   def self.[](machine)
     case machine
@@ -42,14 +45,8 @@ class UriEntry < ApplicationRecord
       UriEntry.where machine_id: machine
     when Machine
       UriEntry.where machine: machine
-    when IPAddr
-      UriEntry.where machine: Machine.find_by(ip: machine)
     when String
-      begin
-        UriEntry.where machine: Machine.find_by(ip: IPAddr.new(machine))
-      rescue
-        UriEntry.where machine: Machine.where('host = :param or user = :param', {param: machine}).take
-      end
+      UriEntry.where machine: Machine.where('host = :param or user = :param', {param: machine}).take
     else
       raise TypeError, "#{machine.class} cannot be used to omnisearch for a Machine."
     end
