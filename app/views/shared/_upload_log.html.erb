@@ -10,14 +10,14 @@
   </div>
 
   <div class="field">
-    <%= label_tag :date_override, "When was this data recorded?" %>
-    <%= date_field_tag :date_override %>
+    <%= label_tag :recorded, "When was this data recorded?" %>
+    <%= date_field_tag :recorded %>
   </div>
 
   <br>
-  
+
   <p>
     *this can take a very long time depending on how much data is in the file.
   </p>
-  <%= submit_tag "Submit", class: "ui button" %>
+  <%= submit_tag "Submit", class: "primary ui button" %>
 <% end %>

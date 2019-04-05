@@ -6,12 +6,8 @@ class UserLog < DataLog
   FORMAT = /inventory_#{TIMESTAMP.source}.csv/i
   GLOB_FORMAT = 'inventory_[0-9]*.csv'
 
-  def initialize(file, date_override: nil, regex: nil)
-    super(file, true, date_override, regex) {|row| parse_row(row)}
-  end
-
-  def self.create_from_timestamped_file(file)
-    UserLog.new(file, regex: TIMESTAMP)
+  def initialize(file, recorded: nil)
+    super(file, true, recorded) {|row| parse_row(row)}
   end
 
   private
@@ -27,7 +23,7 @@ class UserLog < DataLog
                        .new("Unable to find a machine with this hostname.")
       @dirty << row
     else
-      machine.update user: row['Owner'], paper_trail: @date_override
+      machine.update user: row['Owner'], paper_trail: @recorded
     end
   end
 end

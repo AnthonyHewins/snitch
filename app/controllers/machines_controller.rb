@@ -12,7 +12,7 @@ class MachinesController < ApplicationController
 
   # POST /machines/upload
   def insert_data
-    get_log CarbonBlackLog, redirect: machines_path
+    get_log CarbonBlackLog, redirect: machines_path, fallback: machines_upload_path
   end
 
   private

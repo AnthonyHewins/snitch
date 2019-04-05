@@ -8,14 +8,10 @@ class CyberAdaptLog < DataLog
   FORMAT = /flexplan_srcip_host_#{TIMESTAMP.source}.csv/i
   GLOB_FORMAT = './flexplan_srcip_host_[0-9]*.csv'
 
-  def initialize(file, date_override: nil, regex: nil)
+  def initialize(file, recorded: nil)
     init_vars_before_super
-    super(file, false, date_override, regex) {|row| parse_row(row)}
+    super(file, false, recorded) {|row| parse_row(row)}
     mass_insert @clean
-  end
-
-  def self.create_from_timestamped_file(file)
-    CyberAdaptLog.new(file, regex: TIMESTAMP)
   end
 
   private
@@ -27,7 +23,7 @@ class CyberAdaptLog < DataLog
   def parse_row(row)
     uri = parse_uri row[1]
     return if uri.nil? || @whitelist.any? {|regex| regex.match? uri}
-    queue_insert(row[0], uri, row[2], @date_override)
+    queue_insert(row[0], uri, row[2], @recorded)
   end
 
   def parse_uri(uri)

@@ -12,7 +12,7 @@ RSpec.describe WhitelistLog do
   end
 
   before :each do
-    @obj = WhitelistLog.new @filename, date_override: FFaker::Time.date
+    @obj = WhitelistLog.new @filename, recorded: FFaker::Time.date
   end
 
   it 'inherits from DataLog' do
@@ -21,9 +21,9 @@ RSpec.describe WhitelistLog do
 
   context 'private:' do
     context '#parse_row(row)' do
-      it 'sets the whitelists paper_trail to @date_override' do
+      it 'sets the whitelists paper_trail to @recorded' do
         paper_trail = create :paper_trail
-        @obj.instance_variable_set :@date_override, paper_trail
+        @obj.instance_variable_set :@recorded, paper_trail
         @obj.send :parse_row, {'regex_string' => @regex}
         expect(Whitelist.first.paper_trail).to eq paper_trail
       end

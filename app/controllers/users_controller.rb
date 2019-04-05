@@ -10,6 +10,6 @@ class UsersController < ApplicationController
 
   # POST /users/upload
   def insert_data
-    get_log UserLog, redirect: machines_path
+    get_log UserLog, redirect: machines_path, fallback: users_upload_path
   end
 end

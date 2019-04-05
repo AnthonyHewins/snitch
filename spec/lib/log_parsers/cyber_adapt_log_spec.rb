@@ -3,7 +3,7 @@ require Rails.root.join 'lib/assets/log_parsers/cyber_adapt_log'
 
 RSpec.describe CyberAdaptLog do
   before :all do
-    @filename = Rails.root.join('tmp/cyber_adapt_log_20190901.csv').to_path
+    @filename = Rails.root.join('tmp/flexplan_srcip_host_20190901.csv').to_path
     @ip = FFaker::Internet.ip_v4_address
     @uri = FFaker::Internet.uri 'http'
     @hits = rand(1000)
@@ -11,27 +11,24 @@ RSpec.describe CyberAdaptLog do
   end
 
   before :each do
-    @obj = CyberAdaptLog.new @filename, date_override: FFaker::Time.date
+    @obj = CyberAdaptLog.new @filename, recorded: FFaker::Time.date
   end
 
   it 'inherits from DataLog' do
     expect(CyberAdaptLog).to be < DataLog
   end
 
-  context '::create_from_timestamped_file' do
-    it 'returns the exact same output as new(file, regex: TIMESTAMP)' do
-      # Normally its better to do #new and ::create_... and make sure the 2
-      # generated objects are equal, but the way the tests are set up it's hard
-      # to accomplish this with UriEntries generating different IDs.
-      expect(CyberAdaptLog.create_from_timestamped_file(@filename).date_override)
-        .to eq CyberAdaptLog.new(@filename, regex: CyberAdaptLog::TIMESTAMP).date_override
-    end
+  it 'handles a fixture CSV to give us confidence it works' do
+    # Normally its better to do #new and ::create_... and make sure the 2
+    # generated objects are equal, but the way the tests are set up it's hard
+    # to accomplish this with UriEntries generating different IDs.
+    expect(CyberAdaptLog.new(@filename).dirty.size).to eq 0
   end
 
   context '#initialize' do
     context 'reads in the CSV given with filename and' do
       it 'creates a UriEntry from the row when there are no problems' do
-        expect{CyberAdaptLog.new @filename, date_override: FFaker::Time.date}
+        expect{CyberAdaptLog.new @filename, recorded: FFaker::Time.date}
           .to change{UriEntry.count}.by 1
       end
 
@@ -40,7 +37,7 @@ RSpec.describe CyberAdaptLog do
         file_with_errors = @filename + 'dirty'
         CSV.open(file_with_errors, 'wb') {|csv| csv << [@ip, @uri, 'asd']}
 
-        obj = CyberAdaptLog.new file_with_errors, date_override: FFaker::Time.date
+        obj = CyberAdaptLog.new file_with_errors, recorded: FFaker::Time.date
 
         expect(obj.dirty.size).to eq 1
       end
@@ -51,7 +48,7 @@ RSpec.describe CyberAdaptLog do
 
       it 'skips the entry if theres a regex in the whitelist matching it' do
         create :whitelist, regex_string: @uri
-        obj = CyberAdaptLog.new @filename, date_override: FFaker::Time.date
+        obj = CyberAdaptLog.new @filename, recorded: FFaker::Time.date
         expect(obj.clean.size + obj.dirty.size).to eq 0
       end
     end

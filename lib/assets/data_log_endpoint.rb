@@ -2,20 +2,22 @@ require_relative 'reportable_endpoint'
 
 module DataLogEndpoint
   include ReportableEndpoint
-  
-  def get_log(log_class, redirect:)
-    log, date_override = params[:log], params[:date_override]
-    log = infer_how_to_insert log_class, log, date_override
-    flash[:info] = "#{log.filename}: #{log.dirty.size} error(s)"
-    redirect_to redirect
+
+  def get_log(log_class, redirect:, fallback:)
+    log, date = params[:log], params[:recorded]
+    begin
+      insert_from_log log_class, log, date
+    rescue ArgumentError
+      flash[:error] = "Specify a date when the data was recorded,
+                       or imply it in the default filename"
+      redirect_to fallback
+    end
   end
 
-  def infer_how_to_insert(log_class, log, date)
-    date = date.blank? ? nil : Date.parse(date)
-    if date.nil?
-      log_class.create_from_timestamped_file(log)
-    else
-      log_class.new log, date_override: date
-    end
+  private
+  def insert_from_log(log_class, log, date)
+    log_class.new log, recorded: date.blank? ? nil : Date.parse(date)
+    flash[:info] = "#{log.filename}: #{log.dirty.size} error(s)"
+    redirect_to redirect
   end
 end

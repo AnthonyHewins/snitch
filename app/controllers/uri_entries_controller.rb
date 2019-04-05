@@ -35,7 +35,7 @@ class UriEntriesController < ApplicationController
     if file.nil?
       "File not found (if it's today's file, this means CyberAdapt hasn't made it yet)"
     else
-      log = CyberAdaptLog.create_from_timestamped_file file
+      log = CyberAdaptLog.new file
       "#{log.filename}: upserted #{log.clean.size}, had #{log.dirty.size} errors"
     end
   end

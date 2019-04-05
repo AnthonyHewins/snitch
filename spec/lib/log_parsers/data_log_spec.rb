@@ -12,21 +12,15 @@ RSpec.describe DataLog do
   end
 
   before :each do
-    @obj = DataLog.new(@path, false, FFaker::Time.date, nil) {|row| nil}
+    @obj = DataLog.new(@path, false, FFaker::Time.date) {|row| nil}
   end
 
-  subject {DataLog.new(@path, false, FFaker::Time.date, nil) {|row| nil}}
+  subject {DataLog.new(@path, false, FFaker::Time.date) {|row| nil}}
   it {should have_attr_reader :clean}
   it {should have_attr_reader :dirty}
   it {should have_attr_reader :filename}
-  it {should have_attr_reader :date_override}
+  it {should have_attr_reader :recorded}
   it {should have_abstract_method :parse_row}
-
-  context 'protected:' do
-    it '::create_from_timestamped_file raises NotImplementedError' do
-      expect{DataLog.create_from_timestamped_file}.to raise_error NotImplementedError
-    end
-  end
 
   context 'private:' do
     context '#read' do
@@ -253,36 +247,39 @@ RSpec.describe DataLog do
 
     context '#parse_timestamp_args' do
       it "returns PaperTrail.create(insertion_date: arg) if its a Date" do
-        expect(@obj.send :parse_timestamp_args, Date.today, nil)
+        expect(@obj.send :parse_timestamp_args, Date.today)
           .to be_instance_of PaperTrail
       end
 
       it "returns PaperTrail.create(insertion_date: arg.to_date) if its a DateTime" do
-        expect(@obj.send :parse_timestamp_args, DateTime.now, nil)
+        expect(@obj.send :parse_timestamp_args, DateTime.now)
           .to be_instance_of PaperTrail
       end
 
       it "returns the arg if it's a PaperTrail instance" do
         paper_trail = create :paper_trail
-        expect(@obj.send :parse_timestamp_args, paper_trail, nil).to eq paper_trail
+        expect(@obj.send :parse_timestamp_args, paper_trail).to eq paper_trail
       end
 
       it 'raises a type error on anything else' do
-        expect{@obj.send :parse_timestamp_args, 1, nil}.to raise_error TypeError
+        expect{@obj.send :parse_timestamp_args, 1}.to raise_error TypeError
       end
     end
 
-    context '#decide_on_timestamp(date_override, regex)' do
-      it 'takes precendence on date_override and returns it if it isnt nil' do
-        expect(@obj.send :decide_on_timestamp, 1, 2).to eq 1
+    context '#get_filename_timestamp' do
+      before :all do
+        DataLog::FORMAT = /somethin_[0-9]+/
       end
 
-      it 'raises ArgumentError if both args are nil' do
-        expect{@obj.send :decide_on_timestamp, nil, nil}.to raise_error ArgumentError
+      it 'raises ArgumentError if @filename doesnt match self.class::FORMAT' do
+        @obj.instance_variable_set :@filename, '@'
+        expect{@obj.send :get_filename_timestamp}.to raise_error ArgumentError
       end
 
-      it 'uses regex to parse the filename for a timestamp otherwise' do
-        expect(@obj.send :decide_on_timestamp, nil, /[0-9]+/).to eq Date.new(2019, 1, 1)
+      it 'uses TIMESTAMP to parse @filename for a Date' do
+        DataLog::TIMESTAMP = /[0-9]+/
+        @obj.instance_variable_set :@filename, 'somethin_20190101'
+        expect(@obj.send :get_filename_timestamp).to eq Date.new(2019, 1, 1)
       end
     end
 

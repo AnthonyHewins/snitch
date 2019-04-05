@@ -18,13 +18,11 @@ RSpec.describe CarbonBlackLog do
   end
 
   before :each do
-    @obj = CarbonBlackLog.new @filename.to_s, date_override: FFaker::Time.date
+    @obj = CarbonBlackLog.new @filename.to_s, recorded: FFaker::Time.date
   end
 
   it 'handles one of the fixture CSVs to give confidence that it works' do
-    log = CarbonBlackLog.create_from_timestamped_file(
-      Rails.root.join("spec/fixtures/device_status_2019-09-04.csv").to_s
-    )
+    log = CarbonBlackLog.new Rails.root.join("spec/fixtures/device_status_2019-09-04.csv").to_s
     expect(log.dirty.size).to eq 0
   end
 
@@ -54,13 +52,13 @@ RSpec.describe CarbonBlackLog do
           it 'replaces the PaperTrail that it points to' do
             @machine.update paper_trail: create(:paper_trail)
             @obj.send :parse_row, {'lastInternalIpAddress' => @ip, 'name' => @host}
-            expect(@machine.reload.paper_trail).to eq @obj.date_override
+            expect(@machine.reload.paper_trail).to eq @obj.recorded
           end
         end
 
         context 'but not in the DB' do
           it 'creates an instance of a machine with the IP and hostname' do
-            CarbonBlackLog.new @filename, date_override: FFaker::Time.date
+            CarbonBlackLog.new @filename, recorded: FFaker::Time.date
             expect(Machine.find_by ip: @ip, host: @name).to_not be_nil
           end
         end
