@@ -70,48 +70,4 @@ RSpec.describe UriEntry, type: :model do
       expect(@obj.machine).to eq Machine.find @obj.dhcp_lease.machine_id
     end
   end
-
-  context '::[]' do
-    context 'on Integer input' do
-      it 'finds the history with machine_id == arg when it exists' do
-        expect(UriEntry[@obj.machine.id]).to match_array UriEntry.where id: @obj.id
-      end
-
-      it 'returns an empty relation when theres no history for the machine_id' do
-        expect(UriEntry[0]).to match_array UriEntry.where id: -1
-      end
-    end
-
-    context 'on machine input' do
-      it 'does a UriEntry.where machine: arg' do
-        expect(UriEntry[@obj.machine]).to match_array UriEntry.where id: @obj.id
-      end
-    end
-
-    context 'on IPAddr input' do
-      it 'finds the machine with that IP and gets its history' do
-        ip = @obj.machine.ip
-        expect(UriEntry[ip]).to match_array UriEntry.where machine: Machine.find_by(ip: ip)
-      end
-
-      it 'returns an empty relation if the IP isnt associated with a machine' do
-        expect(UriEntry[IPAddr.new('0.0.0.0')]).to match_array UriEntry.where id: -1
-      end
-    end
-
-    context 'on String input' do
-      it 'treats IP strings differently to account for PSQL inet types and finds off that' do
-        ip = @obj.machine.ip.to_s
-        expect(UriEntry[ip]).to match_array UriEntry.where machine: Machine.find_by(ip: ip)
-      end
-
-      it 'returns an empty relation if no machine exists' do
-        expect(UriEntry['']).to match_array UriEntry.where id: -1
-      end
-    end
-
-    it 'raises TypeError on any class type not recognized above' do
-        expect{UriEntry[Object.new]}.to raise_error TypeError
-    end
-  end
 end

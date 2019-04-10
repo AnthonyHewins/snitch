@@ -1,7 +1,10 @@
 require_relative 'data_log'
+require Rails.root.join 'lib/assets/inet_loggable'
 require 'machine'
 
 class CarbonBlackLog < DataLog
+  include InetLoggable
+  
   TIMESTAMP = /[0-9\-]+/
   FORMAT = /device_status_#{TIMESTAMP}.csv/
   GLOB_FORMAT = "device_status_[0-9\-]*.csv"
@@ -15,29 +18,21 @@ class CarbonBlackLog < DataLog
     ip = row['lastInternalIpAddress']
     return if ip.blank?
     begin
-      machine = Machine.find_or_create_by host: row['name']
+      machine = Machine.find_or_create_by host: row['name'].downcase
       machine.update!(paper_trail: @recorded)
-      upsert_dhcp_history ip, machine
+      upsert_dhcp_lease ip, machine, @recorded
     rescue Exception => e
       row['error'] = e
       @dirty << row
     end
   end
 
-  def upsert_dhcp_history(ip, machine)
-    leases = past_history_for_dhcp_leases(ip)
-    if leases.empty?
-      DhcpLease.create!(ip: ip, machine: machine, paper_trail: @date_override)
+  def upsert_dhcp_lease(ip, machine, paper_trail)
+    lease = past_history_for_dhcp_lease(ip, paper_trail.insertion_date)
+    if lease.nil?
+      DhcpLease.create!(ip: ip, machine: machine, paper_trail: paper_trail)
     else
-      leases.update_all(paper_trail: @date_override, machine: machine)
+      lease.update!(machine: machine, paper_trail: paper_trail)
     end
-  end
-
-  def past_history_for_dhcp_leases(ip)
-    DhcpLease.left_outer_joins(:paper_trails)
-      .where(<<-SQL, date: @date_override.insertion_date, ip: ip).limit(1)
-        paper_trails.insertion_date = :date
-        and dhcp_leases.ip = :ip
-      SQL
   end
 end

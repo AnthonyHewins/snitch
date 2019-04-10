@@ -7,7 +7,7 @@ class UriEntriesController < ApplicationController
   include DataLogEndpoint
   
   def index
-    @uri_entries = filter UriEntry, search_fn: lambda {|x| search x}
+    @uri_entries = filter(UriEntry, search_fn: lambda {|x| search x})
     respond @uri_entries
   end
 
@@ -18,13 +18,20 @@ class UriEntriesController < ApplicationController
 
   private
   def search(query)
-    UriEntry.left_outer_joins(:machine).left_outer_joins(:paper_trail)
-      .where <<-SQL, q: "%#{query}%"
-         TEXT(machines.ip) like :q or machines.host like :q or machines.user like :q
+    joins.where <<-SQL, q: "%#{query}%"
+         TEXT(dhcp_leases.ip) like :q or machines.host like :q or machines.user like :q
          or uri like :q or TEXT(paper_trails.insertion_date) like :q
       SQL
   end
 
+  def joins
+    UriEntry.joins(
+      "left outer join dhcp_leases on dhcp_leases.id = uri_entries.dhcp_lease_id
+       left outer join paper_trails on paper_trails.id = uri_entries.paper_trail_id
+       inner join machines on machines.id = dhcp_leases.machine_id"
+    )
+  end
+  
   def open_sftp_and_upsert
     missing = CyberAdaptSftpClient.new.get_missing
     return "Already up to date" if missing.empty?

@@ -38,7 +38,6 @@ RSpec.describe CyberAdaptLog do
         CSV.open(file_with_errors, 'wb') {|csv| csv << [@ip, @uri, 'asd']}
 
         obj = CyberAdaptLog.new file_with_errors, recorded: FFaker::Time.date
-
         expect(obj.dirty.size).to eq 1
       end
 
@@ -117,34 +116,63 @@ RSpec.describe CyberAdaptLog do
         paper_trail = create(:paper_trail)
         @obj.send :queue_insert, @ip, @uri, @hits, paper_trail
         expect(@obj.clean.last)
-          .to eq [Machine.find_by(ip: @ip).id, @uri, @hits, paper_trail.id]
+          .to eq [DhcpLease.find_by(ip: @ip).id, @uri, @hits, paper_trail.id]
       end
     end
 
     context '#memoize_ip(ip_as_a_string)' do
       before :each do
-        # Clear old value from instantiation
-        @obj.instance_variable_set :@ip_lookup_table, {}
-        @machine = create(:machine)
+        # paper_trail must match @obj.recorded, because that's how we know that
+        # this DHCP entry was not an old one, say from yesterday.
+        # Otherwise it has to be ignored
+        @dhcp_lease = create(:dhcp_lease, paper_trail: @obj.recorded)
       end
-      
+
       it 'finds the machine with said ip and records its ID for memoization' do
-        expect(@obj.send :memoize_ip, @machine.ip.to_s).to eq @machine.id
+        expect(@obj.send :memoize_ip, @dhcp_lease.ip.to_s).to eq @dhcp_lease.id
       end
 
       it 'is able to return the ID without SQL using @ip_lookup_table' do
-        @obj.send :memoize_ip, @machine.ip.to_s
-        expect(@obj.instance_variable_get(:@ip_lookup_table))
-          .to eq({@machine.ip.to_s => @machine.id})
+        @obj.send :memoize_ip, @dhcp_lease.ip.to_s
+        expect(@obj.instance_variable_get(:@ip_lookup_table).to_a)
+          .to include([@dhcp_lease.ip.to_s, @dhcp_lease.id])
       end
     end
-    
+
+    context '#upsert_dhcp_lease(ip, paper_trail)' do
+      it 'returns the lease found by ip if it exists' do
+        lease = create :dhcp_lease
+        expect(@obj.send :upsert_dhcp_lease, lease.ip, lease.paper_trail).to eq lease
+      end
+
+      it 'creates a new lease if the ip hasnt been seen before on that day' do
+        expect{
+          @obj.send(
+            :upsert_dhcp_lease,
+            FFaker::Internet.ip_v4_address,
+            create(:paper_trail)
+          )
+        }.to change{DhcpLease.count}.by 1
+      end
+
+      it 'creates the new row with the same paper_trail as the second argument' do
+        paper_trail = create :paper_trail
+        expect(
+          @obj.send(
+            :upsert_dhcp_lease,
+            FFaker::Internet.ip_v4_address,
+            paper_trail
+          ).paper_trail
+        ).to eq paper_trail
+      end
+    end
+
     context '#mass_insert' do
       it 'inserts a UriEntry array in the most low-level way possible for speed' do
-        dummy_paper_trail = create(:paper_trail).id
+        paper_trail, lease = create(:paper_trail).id, create(:dhcp_lease).id
         two_records = [
-          [@uri, 1, dummy_paper_trail],
-          [@uri, 1, dummy_paper_trail],
+          [lease, @uri, 1, paper_trail],
+          [lease, @uri, 1, paper_trail],
         ]
         expect{@obj.send :mass_insert, two_records}.to change{UriEntry.count}.by(2)
       end

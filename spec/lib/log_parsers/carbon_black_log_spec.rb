@@ -8,9 +8,7 @@ RSpec.describe CarbonBlackLog do
 
   before :all do
     @filename = Rails.root.join('tmp/carbon_black_log.csv').to_path
-    @ip = FFaker::Internet.ip_v4_address
-    @name = FFaker::Lorem.word
-    @paper_trail_id = create(:paper_trail).id
+    @ip, @name = FFaker::Internet.ip_v4_address, FFaker::Lorem.word
     CSV.open(@filename, 'wb') do |csv|
       csv << ['lastInternalIpAddress', 'name']
       csv << [@ip, @name]
@@ -23,13 +21,13 @@ RSpec.describe CarbonBlackLog do
 
   it 'handles one of the fixture CSVs to give confidence that it works' do
     log = CarbonBlackLog.new Rails.root.join("spec/fixtures/device_status_2019-09-04.csv").to_s
-    expect(log.dirty.size).to eq 0
+    expect(log.dirty.size).to eq 24
   end
 
   context 'private:' do
     before :each do
       @machine = create :machine
-      @hash = {'lastInternalIpAddress' => @ip, 'name' => FFaker::Lorem.word}
+      @hash = {'lastInternalIpAddress' => @ip, 'name' => @machine.host}
     end
 
     context '#parse_row(row)' do
@@ -37,28 +35,27 @@ RSpec.describe CarbonBlackLog do
         expect{@obj.send :parse_row, Object.new}.to raise_error NoMethodError
       end
 
-      context 'on good data' do
-        context 'and in the DB already' do
-          it 'uses the old instance if a machine exists with the IP from the file' do
+      it 'does nothing if row["lastInternalIpAddress"].blank?' do
+        expect(@obj.send :parse_row, {'lastInternalIpAddress' => ""}).to be nil
+      end
+ 
+      context 'on no exception when the machine' do
+        context 'exists with the specified hostname' do
+          it 'uses the old instance' do
             expect{@obj.send :parse_row, @hash}.not_to change{Machine.count}
-          end
-
-          it 'replaces the name of the machine' do
-            expect{@obj.send :parse_row, @hash}
-              .to change{@machine.reload.host}.from(@machine.host).to(@hash['name'])
           end
 
           it 'replaces the PaperTrail that it points to' do
             @machine.update paper_trail: create(:paper_trail)
-            @obj.send :parse_row, {'lastInternalIpAddress' => @ip, 'name' => @host}
+            @obj.send :parse_row, @hash
             expect(@machine.reload.paper_trail).to eq @obj.recorded
           end
         end
 
-        context 'but not in the DB' do
+        context 'doesnt exist with the specified hostname' do
           it 'creates an instance of a machine with the IP and hostname' do
-            CarbonBlackLog.new @filename, recorded: FFaker::Time.date
-            expect(Machine.find_by ip: @ip, host: @name).to_not be_nil
+            @hash['name'] = 'something the database hasnt seen yet'
+            expect{@obj.send :parse_row, @hash}.to change{Machine.count}.by(1)
           end
         end
 
@@ -73,37 +70,34 @@ RSpec.describe CarbonBlackLog do
       end
     end
 
-    context '#upsert_dhcp_history(ip, machine)' do
-      it 'creates a DhcpLease if it doesnt find one' do
-        expect{@obj.send :upsert_dhcp_history, @ip, @machine}
-          .to change{DhcpLease.count}.from(0).to(1)
+    context '#upsert_dhcp_lease(ip, machine, paper_trail)' do
+      it 'creates a DhcpLease if it doesnt find one because its a different IP' do
+        expect {
+          @obj.send :upsert_dhcp_lease, FFaker::Internet.ip_v4_address, @machine, @obj.recorded
+        }.to change{DhcpLease.count}.by(1)
       end
 
-      context 'when a lease is found' do
+      it 'creates a DhcpLease if it doesnt find one because its from a different day' do
+        expect{
+          @obj.send :upsert_dhcp_lease, @ip, @machine, create(:paper_trail)
+        }.to change{DhcpLease.count}.by(1)
+      end
+
+      context 'when a lease is found by ip and paper_trail.insertion_date because it has internet history on that day' do
         before :each do
-          @lease = create(
-            :dhcp_lease,
-            ip: @ip,
-            paper_trail: create(
-              :paper_trail,
-              insertion_date: @obj.date_override.insertion_date
-            )
-          )
-          @obj.send :upsert_dhcp_history, @ip, @machine
-        end
-        
-        it 'updates the leases machine FK to the machine being inserted' do
-          expect(@lease.machine).to eq @machine
+          paper_trail = create :paper_trail, insertion_date: @obj.recorded.insertion_date
+          @lease = create :dhcp_lease, paper_trail: paper_trail
+          @obj.send :upsert_dhcp_lease, @lease.ip, @machine, @obj.recorded
         end
 
-        it 'updates the paper_trail to the machines paper_trail' do
-          expect(@lease.paper_trail).to eq @obj.date_override
+        it 'updates the lease.paper_trail to be paper_trail' do
+          expect(@lease.reload.paper_trail).to eq @obj.recorded
+        end
+
+        it 'updates the lease.machine to be machine' do
+          expect(@lease.reload.machine).to eq @machine
         end
       end
-    end
-
-    context '#past_history_for_dhcp_leases(ip)' do
-
     end
   end
 end

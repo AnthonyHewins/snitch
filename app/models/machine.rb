@@ -27,20 +27,36 @@ class Machine < ApplicationRecord
   def ip(date=nil)
     case date
     when NilClass
-      DhcpLease.pluck(:ip).find_by(machine: self).last
+      last_known_ip
     when DateTime, Date
-      DhcpLease.pluck(:ip).left_outer_joins(:paper_trails)
-        .where <<-SQL, m_id: id, date: date
-          machines.id = :m_id and paper_trails.insertion_date = :date
-        SQL
+      ip_on_date date
     when PaperTrail
-      DhcpLease.select(:ip).where(machine: self, paper_trail: date)
+      ip_on_date date.insertion_date
     else
-      raise TypeError
+      raise TypeError, "date must be a datelike object, PaperTrail or nil"
     end
   end
-  
+
   def to_a(*cols)
     cols.empty? ? super(*CsvColumns) : super(*cols)
+  end
+
+  private
+  def last_known_ip
+    pluck_ip do |q|
+      q.where(machine: self)
+        .order('paper_trails.insertion_date desc')
+    end
+  end
+
+  def ip_on_date(date)
+    pluck_ip do |q|
+      q.where('paper_trails.insertion_date = :date and machine_id = :id', date: date, id: id)
+    end
+  end
+
+  def pluck_ip
+    yield(DhcpLease.left_outer_joins(:paper_trail))
+      .limit(1).pluck(:ip).first
   end
 end

@@ -1,9 +1,12 @@
 require_relative 'data_log'
-require Rails.root.join 'app/models/uri_entry'
-require Rails.root.join 'app/models/whitelist'
-require Rails.root.join 'app/models/machine'
+require Rails.root.join 'lib/assets/inet_loggable'
+require 'uri_entry'
+require 'whitelist'
+require 'machine'
 
 class CyberAdaptLog < DataLog
+  include InetLoggable
+
   TIMESTAMP = /[0-9]+/
   FORMAT = /flexplan_srcip_host_#{TIMESTAMP.source}.csv/i
   GLOB_FORMAT = './flexplan_srcip_host_[0-9]*.csv'
@@ -19,7 +22,7 @@ class CyberAdaptLog < DataLog
     @clean, @ip_lookup_table = [], {}
     @whitelist = Whitelist.select(:regex_string).map(&:regex)
   end
-  
+
   def parse_row(row)
     uri = parse_uri row[1]
     return if uri.nil? || @whitelist.any? {|regex| regex.match? uri}
@@ -59,12 +62,18 @@ class CyberAdaptLog < DataLog
 
   def memoize_ip(ip)
     return @ip_lookup_table[ip] if @ip_lookup_table.key? ip
-    @ip_lookup_table[ip] = Machine.find_or_create_by(ip: ip).id
+    @ip_lookup_table[ip] = upsert_dhcp_lease(ip, @recorded).id
   end
   
+  def upsert_dhcp_lease(ip, paper_trail)
+    lease = past_history_for_dhcp_lease ip, paper_trail.insertion_date
+    return lease unless lease.nil?
+    DhcpLease.create(ip: ip, paper_trail: paper_trail)
+  end
+
   def mass_insert(primitive_2d_array)
     UriEntry.import(
-      [:uri, :hits, :paper_trail_id],
+      [:dhcp_lease_id, :uri, :hits, :paper_trail_id],
       primitive_2d_array
     )
   end

@@ -46,7 +46,6 @@ ActiveRecord::Schema.define(version: 2019_04_11_200750) do
   create_table "machines", force: :cascade do |t|
     t.string "user"
     t.string "host"
-    t.inet "ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "paper_trail_id"

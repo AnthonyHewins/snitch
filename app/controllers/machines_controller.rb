@@ -17,10 +17,22 @@ class MachinesController < ApplicationController
 
   private
   def search(query)
-    Machine.left_outer_joins(:paper_trail)
-      .where <<-SQL, q: "%#{query}%"
-        TEXT(ip) like :q or host like :q or machines.user like :q
-        or TEXT(paper_trails.insertion_date) like :q
-      SQL
+    join.where(
+      "host like :q or machines.user like :q
+       or TEXT(paper_trails.insertion_date) like :q
+       or text(x.ip) like :q",
+      q: "%#{query}%"
+    )
+  end
+
+  def join
+    Machine.select('x.ip, machines.*').joins(
+      "left outer join paper_trails on paper_trails.id = machines.paper_trail_id
+      left outer join (
+        select distinct on(dhcp_leases.ip) dhcp_leases.ip, dhcp_leases.machine_id from dhcp_leases
+        left outer join paper_trails on paper_trails.id = dhcp_leases.paper_trail_id
+        order by dhcp_leases.ip, paper_trails.insertion_date desc
+      ) x on x.machine_id = machines.id"
+    )
   end
 end
