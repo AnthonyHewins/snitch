@@ -2,12 +2,14 @@ require 'cyber_adapt_alert'
 
 require_relative 'application_controller'
 
-require Rails.root.join 'lib/assets/mail/cyber_adapt_mail_client'
-require Rails.root.join 'lib/assets/mail/cyber_adapt_mail_parser'
-require Rails.root.join 'lib/assets/reportable_endpoint'
+require Rails.root.join 'lib/assets/mail/mail_clients/cyber_adapt_mail_client'
+require Rails.root.join 'lib/assets/mail/mail_parsers/cyber_adapt_mail_parser'
+require Rails.root.join 'lib/assets/alert_endpoint'
 
 class CyberAdaptAlertsController < ApplicationController
-  include ReportableEndpoint
+  MODEL = CyberAdaptAlert
+  
+  include AlertEndpoint
 
   before_action :set_alert, only: %i(set_resolved show edit update)
   
@@ -29,17 +31,14 @@ class CyberAdaptAlertsController < ApplicationController
     redirect_to cyber_adapt_alert_path(@alert)
   end
 
-  def set_resolved
-    resolved = params[:resolved] == "true"
-    @alert.update resolved: resolved
-    flash[:info] = "Marked alert #{@alert.alert_id} as #{'un' if !resolved}resolved"
-    redirect_to cyber_adapt_alerts_path
-  end
-  
   def pull_from_exchange
     already_have = Set.new CyberAdaptAlert.pluck(:alert_id)
     insert_everything_not_in already_have
     redirect_to cyber_adapt_alerts_path
+  end
+
+  def set_resolved
+    resolve_alert(@alert, cyber_adapt_alerts_path)
   end
 
   private

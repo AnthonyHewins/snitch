@@ -2,7 +2,7 @@ require 'yaml'
 
 require_relative 'mail_client'
 
-class CyberAdaptMailClient < MailClient
+class MailClient < MailClient
   USER = "reporting"
   ENDPOINT = "https://email.flexibleplan.com/ews/Exchange.asmx"
   ALERT_REGEX = /^\[cyberadapt.com #[0-9]+\] AutoReply: flexplan/

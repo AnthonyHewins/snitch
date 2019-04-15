@@ -1,6 +1,6 @@
 require 'rails_helper'
-require Rails.root.join 'lib/assets/mail/mail_client'
-require Rails.root.join 'lib/assets/mail/cyber_adapt_mail_client'
+require Rails.root.join 'lib/assets/mail/mail_clients/mail_client'
+require Rails.root.join 'lib/assets/mail/mail_clients/cyber_adapt_mail_client'
 
 RSpec.describe MailClient do
   before :each do

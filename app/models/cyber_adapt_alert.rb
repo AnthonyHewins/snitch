@@ -1,4 +1,4 @@
-require Rails.root.join 'lib/assets/mail/cyber_adapt_mail_parser'
+require Rails.root.join 'lib/assets/mail/mail_parsers/cyber_adapt_mail_parser'
 
 class CyberAdaptAlert < ApplicationRecord
   CsvColumns = CyberAdaptAlert.column_names.map &:to_sym

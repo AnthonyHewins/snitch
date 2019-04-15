@@ -1,12 +1,20 @@
+require 'yaml'
 require 'viewpoint'
 
-require_relative '../client/searchable'
+require_relative '../../client/searchable'
 
 class MailClient
   include Searchable
 
-  def initialize(endpoint, user, password)
-    @endpoint, @user, @password = endpoint, user, password
+  USER = "reporting"
+  ENDPOINT = "https://email.flexibleplan.com/ews/Exchange.asmx"
+
+  def initialize(endpoint=ENDPOINT, user=USER, password=nil)
+    if password.nil?
+      secrets = YAML.load(File.open(Rails.root.join 'config/secrets.yml'))
+      password = secrets['mail_password']
+    end
+    @endpoint, @user, @password = endpoint || ENDPOINT, user || USER, password
   end
 
   def pull(mailbox, opts={}, &filter)

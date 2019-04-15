@@ -1,4 +1,8 @@
+require_relative 'mail_parser'
+
 class CyberAdaptMailParser
+  include MailParser
+  
   def initialize(email_string=nil)
     @string = email_string
   end
@@ -18,28 +22,14 @@ class CyberAdaptMailParser
   end
 
   private
-  def find_then_eat(start, stop)
-    @string = kill_off_everything_before start
-    end_slice = @string.index(stop)
-    target_text = @string[0..(end_slice - 1)]
-    @string = @string[ (end_slice + stop.length)..-1 ]
-    return target_text
-  end
-
   def copy_message_payload
     # This kills everything outside the payload because it's in a <pre> tag.
     # We also need to duplicate @string so we can continue killing off text during
     # our search process. As @string shortens, so does runtime
-    @string = @string[ 0..(@string.rindex("</pre>") - 1)  ]
-    @string = @string[ (@string.index("<pre") + 1)..-1 ]
-    @string = @string[ (@string.index('>') + 1)..-1 ]
+    @string = @string[ 0..(@string.rindex("</pre>") - 1) ]
+    @string = @string[ (@string.index("<pre") + 1)..-1   ]
+    @string = @string[ (@string.index('>') + 1)..-1      ]
     @string.dup
-  end
-
-  def kill_off_everything_before(start)
-    return @string if start.nil?
-    beginning_we_dont_care_about = @string.index(start) + start.length
-    @string.slice beginning_we_dont_care_about..-1
   end
 end
 

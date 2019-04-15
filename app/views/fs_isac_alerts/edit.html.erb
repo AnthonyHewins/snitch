@@ -1,0 +1,25 @@
+<div class="ui container">
+
+  <h1>FS-ISAC alert #<%= @alert.tracking_id %></h1>
+
+  <%= form_for @alert, url: fs_isac_alert_path(@alert), method: :patch do |f| %>
+    <div class="ui form">
+
+      <div class="field">
+        <div class="ui checkbox">
+          <%= f.check_box :resolved %>
+          <%= f.label :resolved, "Resolved?" %>
+        </div>
+      </div>
+      
+      <div class="field">
+        <%= f.label :comment %>
+        <%= f.text_area :comment %>
+      </div>
+
+      <div class="field">
+        <%= f.submit class: "primary ui button" %>
+      </div>
+    </div>
+  <% end %>
+</div>

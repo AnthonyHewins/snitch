@@ -1,0 +1,34 @@
+<%= render('shared/index_header',
+           title: "FS ISAC Alerts",
+           model: FsIsacAlert,
+           var: @alerts) %>
+
+<%= render 'shared/search', path: fs_isac_alerts_path %>
+
+<%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
+ fs_isac_alerts_path(q: params[:q], all: true, format: :csv) %>
+<br>
+<%= link_to("Pull alerts down from Exchange server", fs_isac_alerts_refresh_path)%>
+
+<table class="ui striped celled table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tracking ID</th>
+      <th>Title</th>
+      <th>Alert timestamp</th>
+      <th>Resolved?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @alerts.each do |record| %>
+      <tr>
+        <td><%= link_to record.id, fs_isac_alert_path(record) %></td>
+        <td><%= record.tracking_id %></td>
+        <td><%= record.title %></td>
+        <td><%= record.alert_timestamp %></td>
+        <td><%= resolve_icon record %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
