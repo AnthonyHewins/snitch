@@ -7,15 +7,12 @@ require Rails.root.join 'lib/assets/mail/mail_parsers/fs_isac_mail_parser'
 require Rails.root.join 'lib/assets/alert_endpoint'
 
 class FsIsacAlertsController < ApplicationController
-  MODEL = FsIsacAlert
-
   include AlertEndpoint
 
   before_action :set_alert, only: %i(set_resolved show edit update)
 
   def index
-    @alerts = filter(FsIsacAlert, search_fn: lambda {|x| search x})
-                .order 'resolved asc, alert_timestamp desc'
+    @alerts = filter(FsIsacAlert).order 'resolved asc, alert_timestamp desc'
     respond @alerts
   end
 
@@ -52,20 +49,8 @@ class FsIsacAlertsController < ApplicationController
       FsIsacAlert.create hash
     end
   end
-  
+
   def fs_isac_alert_params
     params.require(:fs_isac_alert).permit :comment, :resolved
-  end
-  
-  def search(query)
-    FsIsacAlert.where <<-SQL, q: "%#{query}%"
-      title like :q
-      or alert like :q
-      or affected_products like :q
-      or corrective_action like :q
-      or sources like :q
-      or TEXT(tracking_id) like :q
-      or TEXT(alert_timestamp) like :q
-    SQL
   end
 end

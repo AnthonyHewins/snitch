@@ -23,6 +23,37 @@ RSpec.describe Machine, type: :model do
     end
   end
 
+  context 'scope(:search)' do
+    %i(user host).each do |sym|
+      it "finds based on :#{sym}" do
+        expect(Machine.search @obj.send(sym)).to include @obj
+      end
+    end
+
+    it 'finds based on paper_trail.insertion_date' do
+      expect(Machine.search @obj.paper_trail.insertion_date).to include @obj
+    end
+
+    context 'finds the machine by its latest known ip' do
+      before :each do
+        @old = create :paper_trail, insertion_date: Date.today
+        @new = create :paper_trail, insertion_date: Date.today + 1
+
+        @old_lease = create :dhcp_lease, machine: @obj, paper_trail: @old
+        @new_lease = create :dhcp_lease, machine: @obj, paper_trail: @new
+      end
+      
+      it '' do
+        expect(Machine.search @new_lease.ip).to include @obj
+      end
+      
+      it 'and not the past ones it had, so long as something new took its place' do
+        create :dhcp_lease, machine: create(:machine), paper_trail: @new, ip: @old_lease.ip
+        expect(Machine.search @old_lease.ip).to_not include @obj
+      end
+    end
+  end
+
   context '#ip(date=nil)' do
     it 'on NilClass returns self.last_known_ip' do
       expect(@obj.ip).to eq @obj.send(:last_known_ip)

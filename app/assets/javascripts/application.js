@@ -20,3 +20,7 @@
 //
 //= require semantic-ui
 //= require_tree .
+
+window.addEventListener('DOMContentLoaded', function() {
+    $(".ui.dropdown").dropdown()
+})

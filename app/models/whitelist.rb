@@ -1,4 +1,4 @@
-require_relative './application_record'
+require_relative 'application_record'
 
 class Whitelist < ApplicationRecord
   CsvColumns = [
@@ -15,6 +15,13 @@ class Whitelist < ApplicationRecord
     UriEntry.destroy matched.map(&:first)
   end
   
+  scope :search, lambda {|q|
+    Whitelist.left_outer_joins(:paper_trail).where(
+      "regex_string like :q or TEXT(paper_trails.insertion_date) like :q",
+      q: "%#{q}%"
+    )
+  }
+  
   def regex
     @regex_obj ||= Regexp.new self.regex_string
   end
@@ -22,9 +29,5 @@ class Whitelist < ApplicationRecord
   def regex_string=(new_string)
     @regex_obj = Regexp.new new_string
     super new_string
-  end
-
-  def to_a(*cols)
-    cols.empty? ? super(*CsvColumns) : super(*cols)
   end
 end

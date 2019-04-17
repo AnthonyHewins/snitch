@@ -8,8 +8,4 @@ class PaperTrail < ApplicationRecord
   has_many :dhcp_leases, dependent: :destroy
 
   validates_presence_of :insertion_date
-
-  def to_a(*cols)
-    cols.empty? ? super(*CsvColumns) : super(*cols)
-  end
 end

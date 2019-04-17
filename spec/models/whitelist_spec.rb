@@ -15,6 +15,16 @@ RSpec.describe Whitelist, type: :model do
         .to change{UriEntry.count}.from(1).to(0)
     end
   end
+
+  context 'scope(:search)' do
+    it "finds things based on paper_trail.insertion_date" do
+      expect(Whitelist.search(@obj.paper_trail.insertion_date.to_date)).to include @obj
+    end
+
+    it "finds things based on regex_string" do
+      expect(Whitelist.search(@obj.regex_string)).to include @obj
+    end
+  end 
   
   context '#regex' do
     it 'should proxy the value for regex_string in @regex_obj as a regex' do

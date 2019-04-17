@@ -3,23 +3,31 @@ source 'https://rubygems.org'
 ruby '2.6.0'
 
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
+
+# Database
+gem 'pg'
+
+# Server
 gem 'puma', '~> 3.11'
 gem 'uglifier', '>= 1.3.0'
 gem 'turbolinks', '~> 5'
 gem 'therubyracer'
-gem 'pg'
+gem 'bootsnap', '>= 1.1.0', require: false
+
+# Model
 gem 'activerecord-import'
+
+# Controller
+
+# View
 gem 'semantic-ui-sass'
 gem 'jquery-rails'
-gem 'viewpoint'
 
-# For automatic SFTP downloads
+# APIs and crypto wrappers
 gem 'net-sftp'
 gem 'ed25519'
 gem 'bcrypt_pbkdf'
-
-# Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'viewpoint'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -42,6 +50,3 @@ group :test do
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
 end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

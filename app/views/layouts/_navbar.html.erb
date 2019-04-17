@@ -2,7 +2,7 @@
   <%= link_to "Machines", machines_path, class: "item" %>
   <%= link_to "CyberAdapt traffic", uri_entries_path, class: "item" %>
   <%= link_to "Whitelist", whitelists_path, class: "item" %>
-  <div id="upload" class="item ui dropdown">
+  <div class="item ui dropdown">
     <div class="text">Alerts</div>
     <i class="dropdown icon"></i>
     <div class="menu">
@@ -10,7 +10,7 @@
       <%= link_to "FS ISAC alerts", fs_isac_alerts_path, class: "item" %>
     </div>
   </div>
-  <div id="upload" class="item ui dropdown">
+  <div class="item ui dropdown">
     <div class="text">Upload</div>
     <i class="dropdown icon"></i>
     <div class="menu">
@@ -20,5 +20,3 @@
     </div>
   </div>
 </div>
-
-<script>$("#upload").dropdown()</script>

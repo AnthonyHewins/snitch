@@ -1,12 +1,8 @@
 module ReportableEndpoint
-  def filter(model, search_fn:)
+  def filter(model)
     query, show_all = params[:q], params[:all]
-    if query.nil?
-      show_all ? model.all : model.limit(50)
-    else
-      results = search_fn.call query
-      show_all ? results : results.limit(50)
-    end
+    results = model.search(query.nil? ? '' : query)
+    show_all ? results : results.limit(50)
   end
 
   def respond(relation)

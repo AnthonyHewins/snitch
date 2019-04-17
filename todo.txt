@@ -1,8 +1,21 @@
-Research
-========================================================
-Jolene and Jennifer
-
-user to hostname mapping with static directory to pull down
-how long is CB data persisted in the cloud
-what's cyberadapts window for grabbing data
-make a release
+some tech that doesnt affect us (but these will need to be verified)
+====================================================================
+IBM anything
+BIG-IP
+Juniper
+Red Hat
+Amazon
+Junos
+McAfee
+SonicWALL
+VMware
+Apache
+Cisco
+SUSE
+HP
+Palo Alto
+F5
+SAP
+iOS
+Oracle (Java)
+Drupal

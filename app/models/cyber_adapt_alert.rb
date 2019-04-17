@@ -23,6 +23,18 @@ class CyberAdaptAlert < ApplicationRecord
     record.alert = record.alert.gsub(bad_chars, ' ').squish
   end
 
+  scope :search, lambda {|q|
+    CyberAdaptAlert.where <<-SQL, q: "%#{q}%"
+      msg like :q
+      or TEXT(alert_id) like :q
+      or TEXT(alert_timestamp) like :q
+      or TEXT(src_ip) like :q
+      or TEXT(dst_ip) like :q
+      or TEXT(src_port) like :q
+      or TEXT(dst_port) like :q
+    SQL
+  }
+  
   def self.create_from_email(email)
     case email
     when String
@@ -32,9 +44,5 @@ class CyberAdaptAlert < ApplicationRecord
       raise TypeError, "email must be String or Viewpoint::EWS::Types::Message"
     end
     CyberAdaptAlert.find_or_create_by CyberAdaptMailParser.new(email).parse
-  end
-
-  def to_a(*cols)
-    cols.empty? ? super(*CsvColumns) : super(*cols)
   end
 end

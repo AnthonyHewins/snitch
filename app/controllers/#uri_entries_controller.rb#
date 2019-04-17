@@ -7,7 +7,8 @@ class UriEntriesController < ApplicationController
   include DataLogEndpoint
   
   def index
-    @uri_entries = filter(UriEntry).order('paper_trails.insertion_date desc')
+    @uri_entries = filter(UriEntry, search_fn: lambda {|x| search x})
+                     .order('paper_trails.insertion_date desc')
     respond @uri_entries
   end
 
@@ -16,7 +17,7 @@ class UriEntriesController < ApplicationController
     redirect_to uri_entries_path
   end
 
-  private
+  
   def open_sftp_and_upsert
     missing = CyberAdaptSftpClient.new.get_missing
     return "Already up to date" if missing.empty?

@@ -1,5 +1,5 @@
-require 'spec_helper'
-require_relative '../../../lib/assets/sftp/sftp_client'
+require 'rails_helper'
+require Rails.root.join 'lib/assets/sftp/sftp_client'
 
 RSpec.describe SftpClient do
   subject {SftpClient.new nil, nil}

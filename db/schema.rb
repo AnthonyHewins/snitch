@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_11_200750) do
+ActiveRecord::Schema.define(version: 2019_04_12_000000) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,6 +28,16 @@ ActiveRecord::Schema.define(version: 2019_04_11_200750) do
     t.datetime "updated_at", null: false
     t.boolean "resolved", default: false
     t.text "comment"
+  end
+
+  create_table "dhcp_leases", force: :cascade do |t|
+    t.inet "ip", null: false
+    t.bigint "machine_id"
+    t.bigint "paper_trail_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["machine_id"], name: "index_dhcp_leases_on_machine_id"
+    t.index ["paper_trail_id"], name: "index_dhcp_leases_on_paper_trail_id"
   end
 
   create_table "fs_isac_alerts", force: :cascade do |t|
@@ -65,8 +76,8 @@ ActiveRecord::Schema.define(version: 2019_04_11_200750) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "paper_trail_id"
-    t.bigint "machine_id"
-    t.index ["machine_id"], name: "index_uri_entries_on_machine_id"
+    t.bigint "dhcp_lease_id"
+    t.index ["dhcp_lease_id"], name: "index_uri_entries_on_dhcp_lease_id"
     t.index ["paper_trail_id"], name: "index_uri_entries_on_paper_trail_id"
   end
 
