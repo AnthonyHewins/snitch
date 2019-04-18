@@ -15,9 +15,9 @@ Rails.application.routes.draw do
   resources :uri_entries, only: [:index]
   resources :machines, only: [:index]
 
-  %i(fs_isac_alerts cyber_adapt_alerts).each do |alert_type|
-    resources alert_type, except: %i(new create) do
-      get 'set_resolved', on: :member
+  %i(cyber_adapt_alerts fs_isac_alerts).each do |sym|
+    resources sym, except: %i(new create) do
+      get 'set_booleans', on: :member
     end
   end
 

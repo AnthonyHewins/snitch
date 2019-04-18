@@ -9,7 +9,7 @@ require Rails.root.join 'lib/assets/alert_endpoint'
 class CyberAdaptAlertsController < ApplicationController
   include AlertEndpoint
 
-  before_action :set_alert, only: %i(set_resolved show edit update)
+  before_action :set_alert, only: %i(set_booleans show edit update)
 
   def index
     @alerts = filter(CyberAdaptAlert).order 'resolved asc, alert_id desc'
@@ -34,8 +34,8 @@ class CyberAdaptAlertsController < ApplicationController
     redirect_to cyber_adapt_alerts_path
   end
 
-  def set_resolved
-    resolve_alert(@alert, cyber_adapt_alerts_path)
+  def set_booleans
+    boolean_update cyber_adapt_alerts_path, @alert, :resolved
   end
 
   private

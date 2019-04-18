@@ -1,14 +1,16 @@
 some tech that doesnt affect us (but these will need to be verified)
 ====================================================================
-IBM anything
+VMware (vsphere isn't the same right?)
+Oracle (Java)
+
+IBM products
 BIG-IP
 Juniper
-Red Hat
-Amazon
+Red Hat Linux
+Amazon (mostly Amazon's linux distro)
 Junos
 McAfee
 SonicWALL
-VMware
 Apache
 Cisco
 SUSE
@@ -17,5 +19,4 @@ Palo Alto
 F5
 SAP
 iOS
-Oracle (Java)
 Drupal

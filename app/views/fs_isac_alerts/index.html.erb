@@ -17,6 +17,7 @@
       <th>Tracking ID</th>
       <th>Title</th>
       <th>Alert timestamp</th>
+      <th>Are we vulnerable?</th>
       <th>Resolved?</th>
     </tr>
   </thead>
@@ -24,10 +25,11 @@
     <% @alerts.each do |record| %>
       <tr>
         <td><%= link_to record.id, fs_isac_alert_path(record) %></td>
-        <td><%= record.tracking_id %></td>
-        <td><%= record.title %></td>
-        <td><%= record.alert_timestamp %></td>
-        <td><%= resolve_fs_isac record %></td>
+        <td><%= record.tracking_id                            %></td>
+        <td><%= record.title                                  %></td>
+        <td><%= record.alert_timestamp                        %></td>
+        <td><%= mark_as_applies record                        %></td>
+        <td><%= resolve_fs_isac record                        %></td>
       </tr>
     <% end %>
   </tbody>

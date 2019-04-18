@@ -7,6 +7,13 @@
 
       <div class="field">
         <div class="ui checkbox">
+          <%= f.check_box :applies %>
+          <%= f.label :applies, "Applies?" %>
+        </div>
+      </div>
+      
+      <div class="field">
+        <div class="ui checkbox">
           <%= f.check_box :resolved %>
           <%= f.label :resolved, "Resolved?" %>
         </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_12_000000) do
+ActiveRecord::Schema.define(version: 2019_04_18_155350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,12 @@ ActiveRecord::Schema.define(version: 2019_04_12_000000) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "applies", default: true
+  end
+
+  create_table "fs_isac_ignore", force: :cascade do |t|
+    t.string "regex_string", null: false
+    t.boolean "case_sensitive", default: false
   end
 
   create_table "machines", force: :cascade do |t|

@@ -9,10 +9,11 @@ require Rails.root.join 'lib/assets/alert_endpoint'
 class FsIsacAlertsController < ApplicationController
   include AlertEndpoint
 
-  before_action :set_alert, only: %i(set_resolved show edit update)
+  before_action :set_alert, only: %i(set_booleans show edit update)
 
   def index
-    @alerts = filter(FsIsacAlert).order 'resolved asc, alert_timestamp desc'
+    @alerts = filter(FsIsacAlert)
+                .order 'applies desc, resolved asc, alert_timestamp desc, tracking_id desc'
     respond @alerts
   end
 
@@ -25,8 +26,8 @@ class FsIsacAlertsController < ApplicationController
     redirect_to fs_isac_alerts_path
   end
 
-  def set_resolved
-    resolve_alert(@alert, fs_isac_alerts_path)
+  def set_booleans
+    boolean_update fs_isac_alerts_path, @alert, :resolved, :applies
   end
 
   def pull_from_exchange
@@ -51,6 +52,6 @@ class FsIsacAlertsController < ApplicationController
   end
 
   def fs_isac_alert_params
-    params.require(:fs_isac_alert).permit :comment, :resolved
+    params.require(:fs_isac_alert).permit :comment, :resolved, :applies
   end
 end

@@ -1,19 +1,33 @@
 <div class="ui container">
   <h1>
-    FS-ISAC alert #<%= @alert.tracking_id %>
+    FS-ISAC alert ID#<%= @alert.id %>
   </h1>
-
-  <h4>
+  <h3>
     <%= @alert.title %>
-  </h4>
+  </h3>
+  <h5>
+    FS-ISAC's Tracking ID: <%= @alert.tracking_id %>
+  </h5>
   
   <%= link_to "Edit", edit_fs_isac_alert_path(@alert) %>
-  
+
   <div class="ui items">
     <div class="item">
       <div class="content">
         <div class="header">
-          <%= resolve_icon(@alert) %>
+          <% applies = @alert.applies %>
+          <%= link_to "We #{applies ? 'ARE' : 'ARE NOT'} vulnerable.", set_booleans_fs_isac_alert_path(@alert, applies: !applies) %>
+        </div>
+        <div class="meta">
+          <span>Click the link to reverse.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="content">
+        <div class="header">
+          <%= resolve_fs_isac(@alert) %>
           <%= @alert.resolved ? "Resolved" : "Unresolved" %>
         </div>
         <div class="meta">
