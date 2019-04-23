@@ -1,22 +1,15 @@
-some tech that doesnt affect us (but these will need to be verified)
-====================================================================
-VMware (vsphere isn't the same right?)
-Oracle (Java)
+Speed
+1. Use tries whenever possible in alerts and in whitelists/blacklists
+2. Use the import function across models for log parsing for huge gains
+3. Use better memoization techniques in client interfaces (I'm referring to lib/assets/**/clients)
 
-IBM products
-BIG-IP
-Juniper
-Red Hat Linux
-Amazon (mostly Amazon's linux distro)
-Junos
-McAfee
-SonicWALL
-Apache
-Cisco
-SUSE
-HP
-Palo Alto
-F5
-SAP
-iOS
-Drupal
+Basic Functionality
+1. A page that shows errors when a log is uploaded if there are any
+
+Advanced Functionality
+1. IP blacklist
+2. Ajax request if an IP has a bad rep (or server side)
+3. WYSIWIG editor for linking to emails
+4. CVE parser or a general link parser
+
+999. Pull sensors from carbon black

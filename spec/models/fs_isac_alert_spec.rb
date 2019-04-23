@@ -27,6 +27,11 @@ RSpec.describe FsIsacAlert, type: :model do
         expect(@obj.send(sym)).to eq old
       end
     end
+
+    it 'sets a comment to something like "doesnt apply" if applies is false' do
+      expect(create(:fs_isac_alert, applies: false).comment)
+        .to eq "Auto-classified as DOES NOT APPLY."
+    end
   end
 
   context 'scope(:search)' do

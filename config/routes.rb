@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :dhcp_leases
   get 'drligma' => 'static#drligma'
   
   %i(machines uri_entries users whitelists).each do |i|
@@ -14,6 +13,7 @@ Rails.application.routes.draw do
   resources :whitelists, only: [:index]
   resources :uri_entries, only: [:index]
   resources :machines, only: [:index]
+  resources :fs_isac_ignores
 
   %i(cyber_adapt_alerts fs_isac_alerts).each do |sym|
     resources sym, except: %i(new create) do

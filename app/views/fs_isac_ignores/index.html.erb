@@ -1,0 +1,39 @@
+<%= render('shared/index_header',
+           title: "FS-ISAC ignore rules",
+           model: FsIsacIgnore,
+           var: @fs_isac_ignores) %>
+
+<%= render 'shared/search', path: fs_isac_ignores_path %>
+
+<%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
+ fs_isac_ignores_path(q: params[:q], all: true, format: :csv) %>
+<br>
+
+<%= link_to("New rule", new_fs_isac_ignore_path)%>
+
+<table class="ui striped celled table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Ruby Regex</th>
+      <th>Case sensitive?</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @fs_isac_ignores.each do |record| %>
+      <tr>
+        <td><%= record.id %></td>
+        <td><%= record.regex_string %></td>
+        <td><%= record.case_sensitive %></td>
+        <td>
+          <%= form_for record, method: :delete, path: fs_isac_ignores_path(record) do |f| %>
+            <button class="ui red icon button" tabindex="0" onclick="form.submit()">
+              <i class="trash alternate icon"></i>
+            </button>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

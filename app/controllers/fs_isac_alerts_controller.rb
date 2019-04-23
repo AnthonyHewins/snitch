@@ -32,7 +32,7 @@ class FsIsacAlertsController < ApplicationController
 
   def pull_from_exchange
     already_have = Set.new FsIsacAlert.pluck :tracking_id
-    insert_from_exchange_except already_have
+    insert_from_exchange_except already_have, FsIsacIgnore.all_regexps
     redirect_to fs_isac_alerts_path
   end
 
@@ -41,12 +41,13 @@ class FsIsacAlertsController < ApplicationController
     @alert = FsIsacAlert.find params[:id]
   end
 
-  def insert_from_exchange_except(ids_already_inserted)
+  def insert_from_exchange_except(ids_already_inserted, ignorable_alerts)
     parser = FsIsacMailParser.new
 
     FsIsacMailClient.new.get_missing([]).each do |email|
       hash = parser.parse(email.body)
       next if ids_already_inserted.include? hash[:tracking_id].to_i
+      hash[:applies] = false if ignorable_alerts.any? {|i| i.match? hash[:title]}
       FsIsacAlert.create hash
     end
   end

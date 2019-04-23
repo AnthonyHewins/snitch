@@ -11,11 +11,12 @@ class FsIsacAlert < ApplicationRecord
   ).each do |sym|
     validates_presence_of sym
   end
-  
+
   before_save do |record|
     %i(title alert affected_products corrective_action sources).each do |sym|
       record.send(sym).squish!.gsub!(",", '')
     end
+    record.comment ||= "Auto-classified as DOES NOT APPLY." unless record.applies
   end
 
   scope :search, lambda {|q|

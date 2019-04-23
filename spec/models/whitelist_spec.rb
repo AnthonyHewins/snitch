@@ -2,10 +2,28 @@ require 'rails_helper'
 require 'whitelist'
 
 RSpec.describe Whitelist, type: :model do
-  it {should belong_to(:paper_trail).required(false)}
-  
   before :each do
     @obj = create :whitelist
+  end
+
+  subject {@obj}
+  it {should belong_to(:paper_trail).required(false)}
+
+  it 'should include Concerns::RegexValidatable' do
+    expect(Whitelist).to include Concerns::RegexValidatable
+  end
+  
+  context '#regex' do
+    it 'should proxy the value for regex_string in @regex_obj as a regex' do
+      expect(@obj.regex).to eq Regexp.new(@obj.regex_string)
+    end
+  end
+
+  context '#regex_string=' do
+    it 'should update the value for @regex_obj if regex_string ever changes' do
+      @obj.regex_string = "new"
+      expect(@obj.regex).to eq Regexp.new("new")
+    end
   end
 
   context 'after_save' do
@@ -26,6 +44,16 @@ RSpec.describe Whitelist, type: :model do
     end
   end 
   
+  context '#to_a' do
+    it 'maps each element in CsvColumns to make the machine ready for CSV output' do
+      expect(@obj.to_a).to eq([
+                                @obj.id,
+                                @obj.regex_string,
+                                @obj.paper_trail&.insertion_date,
+                              ])
+    end
+  end
+
   context '#regex' do
     it 'should proxy the value for regex_string in @regex_obj as a regex' do
       expect(@obj.regex).to eq Regexp.new(@obj.regex_string)
@@ -36,16 +64,6 @@ RSpec.describe Whitelist, type: :model do
     it 'should update the value for @regex_obj if regex_string ever changes' do
       @obj.regex_string = "new"
       expect(@obj.regex).to eq Regexp.new("new")
-    end
-  end
-
-  context '#to_a' do
-    it 'maps each element in CsvColumns to make the machine ready for CSV output' do
-      expect(@obj.to_a).to eq([
-                                @obj.id,
-                                @obj.regex_string,
-                                @obj.paper_trail&.insertion_date,
-                              ])
     end
   end
 end
