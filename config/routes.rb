@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'drligma' => 'static#drligma'
+  get 'tball' => 'static#tball'
   
   %i(machines uri_entries users whitelists).each do |i|
     get "#{i}/upload" => "#{i}#upload"
