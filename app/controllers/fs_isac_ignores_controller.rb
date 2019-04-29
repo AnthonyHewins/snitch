@@ -1,8 +1,12 @@
+require 'concerns/authenticatable'
 require Rails.root.join 'lib/assets/reportable_endpoint'
 
 class FsIsacIgnoresController < ApplicationController
+  include Authenticatable
   include ReportableEndpoint
+
   before_action :set_fs_isac_ignore, only: [:show, :edit, :update, :destroy]
+  before_action :check_if_logged_in
 
   def index
     @fs_isac_ignores = filter FsIsacIgnore

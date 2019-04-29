@@ -1,6 +1,6 @@
 require 'cyber_adapt_alert'
-
-require_relative 'application_controller'
+require 'application_controller'
+require 'concerns/authenticatable'
 
 require Rails.root.join 'lib/assets/mail/mail_clients/cyber_adapt_mail_client'
 require Rails.root.join 'lib/assets/mail/mail_parsers/cyber_adapt_mail_parser'
@@ -8,7 +8,9 @@ require Rails.root.join 'lib/assets/alert_endpoint'
 
 class CyberAdaptAlertsController < ApplicationController
   include AlertEndpoint
+  include Authenticatable
 
+  before_action :check_if_logged_in
   before_action :set_alert, only: %i(set_booleans show edit update)
 
   def index

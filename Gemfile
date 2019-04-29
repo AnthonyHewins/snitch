@@ -26,6 +26,7 @@ gem 'jquery-rails'
 # APIs and crypto wrappers
 gem 'net-sftp'
 gem 'ed25519'
+gem 'bcrypt'
 gem 'bcrypt_pbkdf'
 gem 'viewpoint'
 

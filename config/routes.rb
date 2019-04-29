@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   get 'drligma' => 'static#drligma'
   get 'tball' => 'static#tball'
   
+  get "logout" => "sessions#destroy"
+  get "login" => "sessions#new"
+  post "login" => "sessions#create"
+
   %i(machines uri_entries users whitelists).each do |i|
     get "#{i}/upload" => "#{i}#upload"
     post "#{i}/upload" => "#{i}#insert_data"
@@ -11,6 +15,7 @@ Rails.application.routes.draw do
   get 'cyber_adapt_alerts/refresh' => 'cyber_adapt_alerts#pull_from_exchange'
   get 'fs_isac_alerts/refresh' => 'fs_isac_alerts#pull_from_exchange'
 
+  resources :users
   resources :whitelists, only: [:index]
   resources :uri_entries, only: [:index]
   resources :machines, only: [:index]

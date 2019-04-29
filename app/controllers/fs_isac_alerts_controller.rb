@@ -1,3 +1,4 @@
+require 'concerns/authenticatable'
 require 'fs_isac_alert'
 
 require_relative 'application_controller'
@@ -7,8 +8,10 @@ require Rails.root.join 'lib/assets/mail/mail_parsers/fs_isac_mail_parser'
 require Rails.root.join 'lib/assets/alert_endpoint'
 
 class FsIsacAlertsController < ApplicationController
+  include Authenticatable
   include AlertEndpoint
 
+  before_action :check_if_logged_in
   before_action :set_alert, only: %i(set_booleans show edit update)
 
   def index

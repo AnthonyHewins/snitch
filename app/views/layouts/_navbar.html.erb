@@ -26,4 +26,10 @@
       <%= link_to "Whitelist log", whitelists_upload_path, class: "item" %>
     </div>
   </div>
+  <div class="right menu">
+    <div class="item">Snitch v1.5</div>
+    <% unless session[:user_id].nil? %>
+      <%= link_to "Logout", logout_path, class: "item" %>
+    <% end %>
+  </div>
 </div>
