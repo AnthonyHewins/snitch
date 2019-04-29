@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_22_192224) do
+ActiveRecord::Schema.define(version: 2019_04_24_185222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_192224) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "applies"
+    t.boolean "applies", default: true
   end
 
   create_table "fs_isac_ignores", force: :cascade do |t|
@@ -85,6 +85,14 @@ ActiveRecord::Schema.define(version: 2019_04_22_192224) do
     t.bigint "dhcp_lease_id"
     t.index ["dhcp_lease_id"], name: "index_uri_entries_on_dhcp_lease_id"
     t.index ["paper_trail_id"], name: "index_uri_entries_on_paper_trail_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "password_digest"
+    t.boolean "admin"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "whitelists", force: :cascade do |t|

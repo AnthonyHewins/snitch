@@ -1,11 +1,15 @@
+require 'concerns/authenticatable'
 require_relative 'application_controller'
 require Rails.root.join 'lib/assets/data_log_endpoint'
 require Rails.root.join 'lib/assets/sftp/cyber_adapt_sftp_client'
 require Rails.root.join 'lib/assets/log_parsers/cyber_adapt_log'
 
 class UriEntriesController < ApplicationController
+  include Authenticatable
   include DataLogEndpoint
-  
+
+  before_action :check_if_logged_in
+
   def index
     @uri_entries = filter(UriEntry).order('paper_trails.insertion_date desc')
     respond @uri_entries

@@ -4,7 +4,8 @@ Speed
 3. Use better memoization techniques in client interfaces (I'm referring to lib/assets/**/clients)
 
 Basic Functionality
-1. A page that shows errors when a log is uploaded if there are any
+1. password protection
+2. A page that shows errors when a log is uploaded if there are any
 
 Advanced Functionality
 1. IP blacklist
