@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = find_user_by_params
+    user = User.find_by(name: params[:name])&.authenticate(params[:password])
     if user
       login user
     else
@@ -21,13 +21,6 @@ class SessionsController < ApplicationController
   end
 
   private
-  def find_user_by_params
-    user = User.find_by(name: params[:name])
-    raise ActiveRecord::RecordNotFound if user.nil?
-    user = user.authenticate(params[:password])
-    raise ActiveRecord::RecordNotFound unless user
-  end
-
   def login(user)
     session[:user_id] = user.id
     flash[:info] = LOGIN_PROMPT
