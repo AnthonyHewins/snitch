@@ -1,0 +1,28 @@
+<div class="ui container">
+
+  <h1>Edit Machine</h1>
+
+  <%= form_for @machine, url: machine_path(@machine), method: :patch do |f| %>
+    <div class="ui form">
+
+      <div class="field">
+        <%= f.label :comment %>
+        <div class="ui fluid search selection dropdown">
+          <input type="hidden" name="department_id">
+          <div class="default text">Department</div>
+          <div class="menu">
+            <% Department.find_each do |d| %>
+              <div class="item" data-value="<%= d.id %>">
+                <%= d.name %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= f.submit class: "primary ui button" %>
+      </div>
+    </div>
+  <% end %>
+</div>

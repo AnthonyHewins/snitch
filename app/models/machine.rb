@@ -12,6 +12,7 @@ class Machine < ApplicationRecord
   ]
 
   belongs_to :paper_trail, optional: true
+  belongs_to :department, required: false
 
   validates_uniqueness_of :user, allow_nil: true, case_sensitive: false
   validates_uniqueness_of :host, allow_nil: true, case_sensitive: false

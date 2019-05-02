@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_24_185222) do
+ActiveRecord::Schema.define(version: 2019_05_02_162110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,10 @@ ActiveRecord::Schema.define(version: 2019_04_24_185222) do
     t.datetime "updated_at", null: false
     t.boolean "resolved", default: false
     t.text "comment"
+  end
+
+  create_table "departments", force: :cascade do |t|
+    t.string "name"
   end
 
   create_table "dhcp_leases", force: :cascade do |t|
@@ -66,6 +70,8 @@ ActiveRecord::Schema.define(version: 2019_04_24_185222) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "paper_trail_id"
+    t.bigint "department_id"
+    t.index ["department_id"], name: "index_machines_on_department_id"
     t.index ["paper_trail_id"], name: "index_machines_on_paper_trail_id"
   end
 

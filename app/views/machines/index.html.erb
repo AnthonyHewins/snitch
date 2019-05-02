@@ -1,15 +1,38 @@
-<%= render 'shared/data_log_index',
+<%= render('shared/index_header',
+           title: "Machines",
            model: Machine,
-           var: @machines,
-           html_path: machines_path,
-           csv_path: machines_path(q: params[:q], all: true, format: :csv),
-           th: [
-               "ID",
-               "User",
-               "Host",
-               "Last IP",
-               "Last day Carbon black saw this",
-               "Was put into the database at",
-               "Was last updated at"
-           ]
-%>
+           var: @machines) %>
+
+<%= render 'shared/search', path: machines_path %>
+
+<%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
+ machines_path(q: params[:q], all: true, format: :csv) %>
+
+<table class="ui striped celled table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Department</th>
+      <th>Host</th>
+      <th>Last known IP</th>
+      <th>User</th>
+      <th>Last day CarbonBlack saw this</th>
+      <th>Put in the database at</th>
+      <th>Last updated at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @machines.each do |record| %>
+      <tr>
+        <td><%= link_to record.id, edit_machine_path(record) %></td>
+        <td><%= record.department&.name %></td>
+        <td><%= record.host %></td>
+        <td><%= record.ip %></td>
+        <td><%= record.user %></td>
+        <td><%= record.paper_trail&.insertion_date %></td>
+        <td><%= record.created_at %></td>
+        <td><%= record.updated_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

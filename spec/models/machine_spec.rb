@@ -3,6 +3,7 @@ require 'machine'
 
 RSpec.describe Machine, type: :model do
   it {should belong_to(:paper_trail).required(false)}
+  it {should belong_to(:department).required(false)}
   it {should validate_uniqueness_of(:user).case_insensitive.allow_nil}
   it {should validate_uniqueness_of(:host).case_insensitive.allow_nil}
 

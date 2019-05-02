@@ -14,7 +14,27 @@ class MachinesController < ApplicationController
     respond @machines
   end
 
+  def edit
+    @machine = Machine.find params[:id]
+  end
+
+  def update
+    machine = Machine.find params[:id]
+    if machine.update machine_params
+      flash[:info] = "Successfully updated machine #{machine.host}"
+      redirect_to machines_path
+    else
+      flash[:error] = machine.errors
+      redirect_to machine
+    end
+  end
+  
   def insert_data
     get_log CarbonBlackLog, redirect: machines_path, fallback: machines_upload_path
+  end
+
+  private
+  def machine_params
+    params.permit :department_id
   end
 end
