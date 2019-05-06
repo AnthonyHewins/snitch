@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   resources :users
   resources :whitelists, only: [:index]
   resources :uri_entries, only: [:index]
-  resources :machines, only: [:index, :edit, :update]
+  resources :machines, except: [:show]
   resources :fs_isac_ignores
 
   %i(cyber_adapt_alerts fs_isac_alerts).each do |sym|

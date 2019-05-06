@@ -4,8 +4,7 @@ require 'machine'
 RSpec.describe Machine, type: :model do
   it {should belong_to(:paper_trail).required(false)}
   it {should belong_to(:department).required(false)}
-  it {should validate_uniqueness_of(:user).case_insensitive.allow_nil}
-  it {should validate_uniqueness_of(:host).case_insensitive.allow_nil}
+  it {should validate_uniqueness_of(:host).case_insensitive}
 
   before :each do
     @obj = create :machine
@@ -17,6 +16,11 @@ RSpec.describe Machine, type: :model do
         @obj.update(sym => 'A')
         expect(@obj.reload.read_attribute sym).to eq 'a'
       end
+    end
+
+    it 'changes "" to nil for user' do
+      @obj.update user: ""
+      expect(@obj.user).to be nil
     end
 
     it 'should remove the "flexibleplan\\" domain from :host, if present' do

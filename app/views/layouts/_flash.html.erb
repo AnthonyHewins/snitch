@@ -1,10 +1,19 @@
 <% flash.each do |k,v| %>
   <div class="ui container">
     <div class="ui message <%= k %>">
-      <% if v.instance_of? Array %>
+      <% case v %>
+      <% when Array %>
         <ul>
           <% v.each do |element| %>
             <li><%= element %></li>
+          <% end %>
+        </ul>
+      <% when Hash %>
+        <ul>
+          <% v.each do |sym, problems| %>
+            <% problems.each do |problem| %>
+              <%= content_tag :li, "Error with field #{sym}: #{problem}" %>
+            <% end %>
           <% end %>
         </ul>
       <% else %>

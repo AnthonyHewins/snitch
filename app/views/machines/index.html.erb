@@ -8,6 +8,10 @@
 <%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
  machines_path(q: params[:q], all: true, format: :csv) %>
 
+<br>
+
+<%= link_to "New machine", new_machine_path %>
+
 <table class="ui striped celled table">
   <thead>
     <tr>
@@ -19,6 +23,7 @@
       <th>Last day CarbonBlack saw this</th>
       <th>Put in the database at</th>
       <th>Last updated at</th>
+      <th>Delete</th>
     </tr>
   </thead>
   <tbody>
@@ -32,6 +37,13 @@
         <td><%= record.paper_trail&.insertion_date %></td>
         <td><%= record.created_at %></td>
         <td><%= record.updated_at %></td>
+        <td>
+          <%= form_for record, method: :delete, path: machines_path(record) do |f| %>
+            <button class="ui red icon button" tabindex="0" onclick="form.submit()">
+              <i class="trash alternate icon"></i>
+            </button>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

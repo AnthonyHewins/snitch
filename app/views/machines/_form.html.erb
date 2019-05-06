@@ -1,0 +1,34 @@
+<%= form_with model: var, local: true do |f| %>
+  <div class="ui form">
+
+    <div class="field">
+      <%= f.label :user %>
+      <%= f.text_field :user %>
+    </div>
+
+    <div class="field">
+      <%= f.label :host %>
+      *if you change this, this will affect A LOT of things! Be careful!
+      <%= f.text_field :host %>
+    </div>
+
+    <div class="field">
+      <%= f.label :department %>
+      <div class="ui fluid search selection dropdown">
+        <input type="hidden" name="machine[department_id]">
+        <div class="default text">Department</div>
+        <div class="menu">
+          <% Department.find_each do |d| %>
+            <div class="item" data-value="<%= d.id %>">
+              <%= d.name %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <%= f.submit class: "primary ui button" %>
+    </div>
+  </div>
+<% end %>

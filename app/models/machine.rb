@@ -14,11 +14,17 @@ class Machine < ApplicationRecord
   belongs_to :paper_trail, optional: true
   belongs_to :department, required: false
 
-  validates_uniqueness_of :user, allow_nil: true, case_sensitive: false
-  validates_uniqueness_of :host, allow_nil: true, case_sensitive: false
+  validates_uniqueness_of :host, allow_nil: false, case_sensitive: false
 
   before_save do |record|
-    record.user&.downcase!
+    unless record.user.nil?
+      if record.user.empty?
+        record.user = nil
+      else
+        record.user.downcase!
+      end
+    end
+
     unless record.host.nil?
       record.host.downcase!
       record.host.gsub!('flexibleplan\\', '')
@@ -69,7 +75,6 @@ class Machine < ApplicationRecord
   end
 
   def pluck_ip
-    yield(DhcpLease.left_outer_joins(:paper_trail))
-      .limit(1).pluck(:ip).first
+    yield(DhcpLease.left_outer_joins(:paper_trail)).limit(1).pluck(:ip).first
   end
 end
