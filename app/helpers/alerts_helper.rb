@@ -1,9 +1,4 @@
 module AlertsHelper
-  def resolve_cyber_adapt(record)
-    resolved = record.resolved
-    resolve_icon resolved, set_booleans_cyber_adapt_alert_path(record, resolved: !resolved)
-  end
-
   def resolve_fs_isac(record)
     resolved = record.resolved
     resolve_icon resolved, set_booleans_fs_isac_alert_path(record, resolved: !resolved)

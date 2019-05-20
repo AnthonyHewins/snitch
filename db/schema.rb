@@ -10,25 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_02_162110) do
+ActiveRecord::Schema.define(version: 2019_05_20_183748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "cyber_adapt_alerts", force: :cascade do |t|
-    t.integer "alert_id", null: false
-    t.text "alert"
-    t.string "msg"
-    t.inet "src_ip", null: false
-    t.inet "dst_ip", null: false
-    t.integer "src_port", null: false
-    t.integer "dst_port", null: false
-    t.datetime "alert_timestamp", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "resolved", default: false
-    t.text "comment"
-  end
 
   create_table "departments", force: :cascade do |t|
     t.string "name"

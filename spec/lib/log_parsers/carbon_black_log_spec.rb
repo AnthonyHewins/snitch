@@ -21,7 +21,7 @@ RSpec.describe CarbonBlackLog do
 
   it 'handles one of the fixture CSVs to give confidence that it works' do
     log = CarbonBlackLog.new Rails.root.join("spec/fixtures/device_status_2019-09-04.csv").to_s
-    expect(log.dirty.size).to eq 24
+    expect(log.dirty.size).to eq 0
   end
 
   context 'private:' do
