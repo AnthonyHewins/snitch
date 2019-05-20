@@ -18,7 +18,8 @@ class CarbonBlackLog < DataLog
     ip = row['lastInternalIpAddress']
     return if ip.blank?
     begin
-      machine = Machine.find_or_create_by host: row['name'].downcase
+      host = row['name'].downcase.gsub("flexibleplan\\", '')
+      machine = Machine.find_or_create_by host: host
       machine.update!(paper_trail: @recorded)
       upsert_dhcp_lease ip, machine, @recorded
     rescue Exception => e
