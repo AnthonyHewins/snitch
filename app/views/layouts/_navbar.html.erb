@@ -19,6 +19,15 @@
       <%= link_to "Whitelist log", whitelists_upload_path, class: "item" %>
     </div>
   </div>
+  <div class="item ui dropdown">
+    <div class="text">Blacklists</div>
+    <i class="dropdown icon"></i>
+    <div class="menu">
+      <%= link_to "IPs", root_path, class: "item" %>
+      <%= link_to "Domains", root_path, class: "item" %>
+      <%= link_to "Refresh", ms_isac_blacklist_refresh_path, class: "item" %>
+    </div>
+  </div>
   <div class="right menu">
     <div class="item">Snitch v1.5.2</div>
     <% if session[:user_id].nil? %>

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get 'uri_entries/refresh' => 'uri_entries#pull_from_cyberadapt'
   get 'cyber_adapt_alerts/refresh' => 'cyber_adapt_alerts#pull_from_exchange'
   get 'fs_isac_alerts/refresh' => 'fs_isac_alerts#pull_from_exchange'
+  get 'ms_isac_blacklist/refresh' => 'ms_isac_blacklist#pull_from_exchange'
 
   resources :users
   resources :whitelists, only: [:index]
