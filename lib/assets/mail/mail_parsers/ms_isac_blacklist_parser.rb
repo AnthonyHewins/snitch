@@ -13,7 +13,6 @@ class MsIsacBlacklistParser
   def parse(str=@string)
     @string = str[ str.index("Threat Indicators:")..-1 ]
     list = drop_escape_chars_and_split find_then_eat("<p>", "</td>")
-    byebug
     split_into_domains_and_ips(list)
   end
 
