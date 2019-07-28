@@ -19,6 +19,10 @@ RSpec.describe FsIsacMailParser do
       expect(@result[:tracking_id]).to eq "947023"
     end
 
+    it 'the :risk of the alert' do
+      expect(@result[:risk]).to eq 4
+    end
+
     it 'the :alert_timestamp of the alert' do
       expect(@result[:alert_timestamp]).to eq "15 Apr 2019 04:00:00 UTC"
     end
@@ -36,7 +40,7 @@ RSpec.describe FsIsacMailParser do
     end
 
     it 'the :sources of the alert' do
-      expect(@result[:sources]).to eq "Original Advisory:\n: \nhttp://mail-archives.apache.org/mod_mbox/www-announce/201904.mbox/%3CCAG8=FRiDmUtkQOAe29SY9qHo8sMY9cB2djtp4BXk8Fi7uU+=YA@mail.gmail.com%3E\nAdvisory ID:\nSA88455\nCVE #:\nCVE-2019-0231"
+      expect(@result[:sources]).to eq "Original Advisory:\n:\nhttp://mail-archives.apache.org/mod_mbox/www-announce/201904.mbox/%3CCAG8=FRiDmUtkQOAe29SY9qHo8sMY9cB2djtp4BXk8Fi7uU+=YA@mail.gmail.com%3E\nAdvisory ID:\nSA88455\nCVE #:\nCVE-2019-0231"
     end
   end
 end
