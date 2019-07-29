@@ -14,10 +14,7 @@ class FsIsacAlert < ApplicationRecord
 
   SEVERITY_MIN = 1
   SEVERITY_MAX = 10
-  validates_numericality_of :severity,
-                            only_integer: true,
-                            greater_than_equal_to: SEVERITY_MIN,
-                            less_than_equal_to: SEVERITY_MAX
+  validates :severity, inclusion: {in: SEVERITY_MIN..SEVERITY_MAX}
 
   before_save do |record|
     %i(title alert affected_products corrective_action sources).each do |sym|

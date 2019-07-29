@@ -13,9 +13,10 @@ RSpec.describe FsIsacAlert, type: :model do
     it {should validate_presence_of(sym)}
   end
 
-  it {should validate_numericality_of(:severity)
-               .greater_than(FsIsacAlert::SEVERITY_MIN)
-               .less_than(FsIsacAlert::SEVERITY_MAX)}
+  it {should validate_inclusion_of(:severity).in_range(
+               FsIsacAlert::SEVERITY_MIN..FsIsacAlert::SEVERITY_MAX
+             )}
+    
   
   context 'before_save' do
     %i(title alert affected_products corrective_action sources).each do |sym|
