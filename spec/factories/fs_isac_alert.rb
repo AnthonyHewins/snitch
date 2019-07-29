@@ -5,6 +5,8 @@ FactoryBot.define do
     tracking_id { rand(10000) }
 
     applies { [true, false].sample }
+
+    severity { rand(10) + 1 }
     
     alert             { FFaker::Lorem.paragraph }
     affected_products { FFaker::Lorem.paragraph }

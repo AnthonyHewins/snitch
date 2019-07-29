@@ -22,8 +22,8 @@
     <div class="text">Blacklists</div>
     <i class="dropdown icon"></i>
     <div class="menu">
-      <%= link_to "IPs", root_path, class: "item" %>
-      <%= link_to "Domains", root_path, class: "item" %>
+      <%= link_to "IPs", '/ms_isac/ips.txt', class: "item" %>
+      <%= link_to "Domains", '/ms_isac/domains.txt', class: "item" %>
       <%= link_to "Refresh", ms_isac_blacklist_refresh_path, class: "item" %>
     </div>
   </div>

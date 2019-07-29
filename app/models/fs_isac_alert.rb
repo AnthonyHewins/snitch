@@ -1,5 +1,5 @@
 class FsIsacAlert < ApplicationRecord
-  CsvColumns = FsIsacAlert.column_names.map &:to_sym
+  CsvColumns = FsIsacAlert.column_names
 
   validates :tracking_id,
             uniqueness: true,
@@ -11,6 +11,13 @@ class FsIsacAlert < ApplicationRecord
   ).each do |sym|
     validates_presence_of sym
   end
+
+  SEVERITY_MIN = 1
+  SEVERITY_MAX = 10
+  validates_numericality_of :severity,
+                            only_integer: true,
+                            greater_than_equal_to: SEVERITY_MIN,
+                            less_than_equal_to: SEVERITY_MAX
 
   before_save do |record|
     %i(title alert affected_products corrective_action sources).each do |sym|

@@ -14,7 +14,7 @@ class FsIsacMailParser
       title: find_then_eat("Title:\n", "\nTracking ID:\n"),
       tracking_id: find_then_eat(nil, "\nReported Date/Time (UTC):\n"),
       alert_timestamp: find_then_eat(nil, "\nRisk:\n"),
-      risk: Integer(find_then_eat(nil, "\nAudience:\n")),
+      severity: Integer(find_then_eat(nil, "\nAudience:\n")),
       alert: find_then_eat("\nDescription:\n", "\nAffected Products:\n"),
       affected_products: find_then_eat(nil, "\nCorrective Action:\n"),
       corrective_action: find_then_eat(nil, "\nSource(s):\n"),

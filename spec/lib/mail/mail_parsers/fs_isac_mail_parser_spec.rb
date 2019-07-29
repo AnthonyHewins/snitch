@@ -19,8 +19,8 @@ RSpec.describe FsIsacMailParser do
       expect(@result[:tracking_id]).to eq "947023"
     end
 
-    it 'the :risk of the alert' do
-      expect(@result[:risk]).to eq 4
+    it 'the :severity of the alert' do
+      expect(@result[:severity]).to eq 4
     end
 
     it 'the :alert_timestamp of the alert' do
