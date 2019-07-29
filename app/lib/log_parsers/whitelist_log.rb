@@ -1,4 +1,4 @@
-require_relative './data_log'
+require_relative 'data_log'
 
 class WhitelistLog < DataLog
   TIMESTAMP = /[0-9]+/

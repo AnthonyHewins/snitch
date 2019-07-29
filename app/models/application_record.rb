@@ -1,4 +1,4 @@
-require Rails.root.join 'lib/assets/csv_morphable'
+require 'csv_morphable'
 
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true

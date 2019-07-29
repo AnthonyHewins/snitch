@@ -1,7 +1,7 @@
 require 'net/sftp'
 
-require_relative '../client/searchable'
-require_relative './sftp_file'
+require 'client/searchable'
+require_relative 'sftp_file'
 
 class SftpClient
   include Searchable

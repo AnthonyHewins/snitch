@@ -1,7 +1,7 @@
+require 'application_controller'
 require 'concerns/authenticatable'
-require_relative 'application_controller'
-require Rails.root.join 'lib/assets/data_log_endpoint'
-require Rails.root.join 'lib/assets/log_parsers/whitelist_log'
+require 'concerns/data_log_endpoint'
+require 'log_parsers/whitelist_log'
 
 class WhitelistsController < ApplicationController
   include Authenticatable

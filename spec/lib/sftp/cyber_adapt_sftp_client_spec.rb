@@ -1,5 +1,5 @@
 require 'rails_helper'
-require_relative '../../../lib/assets/sftp/cyber_adapt_sftp_client'
+require 'sftp/cyber_adapt_sftp_client'
 
 RSpec.describe CyberAdaptSftpClient do
   before :each do

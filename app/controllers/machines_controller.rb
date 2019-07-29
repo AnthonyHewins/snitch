@@ -1,7 +1,7 @@
-require 'concerns/authenticatable'
 require 'application_controller'
-require Rails.root.join 'lib/assets/data_log_endpoint'
-require Rails.root.join 'lib/assets/log_parsers/carbon_black_log'
+require 'concerns/authenticatable'
+require 'concerns/data_log_endpoint'
+require 'log_parsers/carbon_black_log'
 
 class MachinesController < ApplicationController
   include Authenticatable

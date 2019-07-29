@@ -1,4 +1,4 @@
-require_relative './application_record'
+require_relative 'application_record'
 
 class Machine < ApplicationRecord
   CsvColumns = [
@@ -17,18 +17,12 @@ class Machine < ApplicationRecord
   validates_uniqueness_of :host, allow_nil: false, case_sensitive: false
 
   before_save do |record|
-    unless record.user.nil?
-      if record.user.empty?
-        record.user = nil
-      else
-        record.user.downcase!
-      end
+    u = record.user
+    unless u.nil?
+      record.user = u.empty? ? nil : u.strip.downcase
     end
 
-    unless record.host.nil?
-      record.host.downcase!
-      record.host.gsub!('flexibleplan\\', '')
-    end
+    record.host = record.host.downcase.gsub('flexibleplan\\', '')
   end
 
   scope :search, lambda {|q|

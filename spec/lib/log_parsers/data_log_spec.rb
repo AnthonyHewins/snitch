@@ -1,6 +1,6 @@
 require 'tempfile'
 require 'rails_helper'
-Dir.glob(Rails.root.join 'lib/assets/log_parsers/*').each do |f|
+Dir.glob(Rails.root.join 'log_parsers/*').each do |f|
   require f
 end
 

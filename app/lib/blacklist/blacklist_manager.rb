@@ -1,5 +1,5 @@
-require_relative '../mail/mail_parsers/ms_isac_blacklist_parser'
-require_relative '../mail/mail_clients/fs_isac_mail_client'
+require 'mail/mail_parsers/ms_isac_blacklist_parser'
+require 'mail/mail_clients/fs_isac_mail_client'
 
 class BlacklistManager
   DOMAIN_PATH = Rails.root.join "public/ms_isac/domains.txt"

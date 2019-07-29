@@ -1,5 +1,5 @@
-require 'spec_helper'
-require_relative '../../../lib/assets/client/searchable'
+require 'rails_helper'
+require 'client/searchable'
 
 RSpec.describe Searchable do
   before :all do

@@ -1,5 +1,5 @@
 require 'rails_helper'
-require Rails.root.join 'lib/assets/log_parsers/carbon_black_log'
+require 'log_parsers/carbon_black_log'
 
 RSpec.describe CarbonBlackLog do
   it 'inherits from DataLog' do

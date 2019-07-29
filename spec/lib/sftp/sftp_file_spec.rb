@@ -1,5 +1,5 @@
-require 'spec_helper'
-require_relative '../../../lib/assets/sftp/sftp_file'
+require 'rails_helper'
+require 'sftp/sftp_file'
 
 RSpec.describe SftpFile do
   subject {SftpFile.new}

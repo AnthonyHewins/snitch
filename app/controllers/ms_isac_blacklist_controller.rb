@@ -1,4 +1,4 @@
-require Rails.root.join 'lib/assets/blacklist/blacklist_manager'
+require 'blacklist/blacklist_manager'
 
 class MsIsacBlacklistController < ApplicationController
   def pull_from_exchange

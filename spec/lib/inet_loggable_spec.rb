@@ -1,5 +1,5 @@
 require 'rails_helper'
-require Rails.root.join 'lib/assets/inet_loggable'
+require 'inet_loggable'
 
 RSpec.describe InetLoggable do
   before :all do

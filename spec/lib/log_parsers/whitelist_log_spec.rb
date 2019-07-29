@@ -1,5 +1,5 @@
 require 'rails_helper'
-require Rails.root.join 'lib/assets/log_parsers/whitelist_log'
+require 'log_parsers/whitelist_log'
 
 RSpec.describe WhitelistLog do
   before :all do

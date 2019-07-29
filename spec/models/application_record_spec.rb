@@ -1,5 +1,5 @@
 require 'rails_helper'
-require Rails.root.join 'app/models/application_record'
+require 'application_record'
 
 RSpec.describe ApplicationRecord, type: :model do
   it 'should be an abstract class' do

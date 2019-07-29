@@ -1,11 +1,11 @@
+require_relative 'application_controller'
 require 'concerns/authenticatable'
+require 'concerns/alert_endpoint'
+
 require 'fs_isac_alert'
 
-require_relative 'application_controller'
-
-require Rails.root.join 'lib/assets/mail/mail_clients/fs_isac_mail_client'
-require Rails.root.join 'lib/assets/mail/mail_parsers/fs_isac_mail_parser'
-require Rails.root.join 'lib/assets/alert_endpoint'
+require 'mail/mail_clients/fs_isac_mail_client'
+require 'mail/mail_parsers/fs_isac_mail_parser'
 
 class FsIsacAlertsController < ApplicationController
   include Authenticatable

@@ -1,5 +1,5 @@
-require 'spec_helper'
-require_relative '../../lib/assets/csv_morphable'
+require 'rails_helper'
+require 'csv_morphable'
 
 RSpec.describe CsvMorphable do
   before :all do

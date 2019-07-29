@@ -1,5 +1,5 @@
 require_relative 'data_log'
-require Rails.root.join 'lib/assets/inet_loggable'
+require 'inet_loggable'
 require 'uri_entry'
 require 'whitelist'
 require 'machine'

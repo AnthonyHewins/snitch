@@ -1,7 +1,7 @@
 require 'csv'
 
-require Rails.root.join 'app/models/paper_trail'
-require_relative '../sftp/sftp_file'
+require 'paper_trail'
+require 'sftp/sftp_file'
 
 class DataLog
   attr_reader :clean, :dirty, :filename, :recorded

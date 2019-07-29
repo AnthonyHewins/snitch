@@ -1,5 +1,5 @@
 require 'concerns/authenticatable'
-require Rails.root.join 'lib/assets/reportable_endpoint'
+require 'concerns/reportable_endpoint'
 
 class FsIsacIgnoresController < ApplicationController
   include Authenticatable

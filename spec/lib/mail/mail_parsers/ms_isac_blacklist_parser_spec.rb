@@ -1,9 +1,9 @@
 require 'rails_helper'
-require Rails.root.join 'lib/assets/mail/mail_parsers/ms_isac_blacklist_parser'
+require 'mail/mail_parsers/ms_isac_blacklist_parser'
 
 RSpec.describe MsIsacBlacklistParser do
   before :all do
-    @blacklist = File.read Rails.root.join 'spec/fixtures/ms_isac_blacklist.html'
+    @blacklist = File.read 'spec/fixtures/ms_isac_blacklist.html'
   end
 
   context '#parse(str)' do

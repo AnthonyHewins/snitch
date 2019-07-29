@@ -1,9 +1,9 @@
 require 'rails_helper'
-require Rails.root.join 'lib/assets/mail/mail_parsers/fs_isac_mail_parser'
+require 'mail/mail_parsers/fs_isac_mail_parser'
 
 RSpec.describe FsIsacMailParser do
   before :all do
-    @alert = File.read Rails.root.join 'spec/fixtures/fs_isac_alert.html'
+    @alert = File.read 'spec/fixtures/fs_isac_alert.html'
   end
 
   context '#parse(string) returns in a dictionary' do

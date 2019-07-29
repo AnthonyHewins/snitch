@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get "login" => "sessions#new"
   post "login" => "sessions#create"
 
-  %i(machines uri_entries users whitelists).each do |i|
+  %w(machines uri_entries whitelists).each do |i|
     get "#{i}/upload" => "#{i}#upload"
     post "#{i}/upload" => "#{i}#insert_data"
   end
@@ -16,7 +16,6 @@ Rails.application.routes.draw do
   get 'fs_isac_alerts/refresh' => 'fs_isac_alerts#pull_from_exchange'
   get 'ms_isac_blacklist/refresh' => 'ms_isac_blacklist#pull_from_exchange'
 
-  resources :users
   resources :whitelists, only: [:index]
   resources :uri_entries, only: [:index]
   resources :machines, except: [:show]

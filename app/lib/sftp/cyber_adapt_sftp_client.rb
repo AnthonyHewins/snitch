@@ -1,6 +1,6 @@
 require 'date'
 
-require_relative './sftp_client'
+require_relative 'sftp_client'
 
 class CyberAdaptSftpClient < SftpClient
   FIRST_DAY_OF_TRACKING = Date.new(2018, 10, 19)

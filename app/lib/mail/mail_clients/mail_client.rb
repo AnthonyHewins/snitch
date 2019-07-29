@@ -1,7 +1,7 @@
 require 'yaml'
 require 'viewpoint'
 
-require_relative '../../client/searchable'
+require 'client/searchable'
 
 class MailClient
   include Searchable

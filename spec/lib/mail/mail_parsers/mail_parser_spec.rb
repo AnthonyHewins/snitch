@@ -1,5 +1,5 @@
 require 'rails_helper'
-require Rails.root.join 'lib/assets/mail/mail_parsers/mail_parser'
+require 'mail/mail_parsers/mail_parser'
 
 RSpec.describe MailParser do
   before :all do

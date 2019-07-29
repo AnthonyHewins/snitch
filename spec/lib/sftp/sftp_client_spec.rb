@@ -1,5 +1,5 @@
 require 'rails_helper'
-require Rails.root.join 'lib/assets/sftp/sftp_client'
+require 'sftp/sftp_client'
 
 RSpec.describe SftpClient do
   subject {SftpClient.new nil, nil}
@@ -19,7 +19,7 @@ RSpec.describe SftpClient do
     it "downloads a files from test.rebex.net matching /[a-z]*.txt/ (should be a readme)" do
       test_file = SftpFile.new(
         filename: "readme.txt",
-        text: File.read(Rails.root.join 'spec/fixtures/readme.txt')
+        text: File.read('spec/fixtures/readme.txt')
       )
       expect(@obj.pull(name: /[a-z]*.txt/i)).to eq test_file
     end

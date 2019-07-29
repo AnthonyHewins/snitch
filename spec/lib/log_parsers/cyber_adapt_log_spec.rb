@@ -1,5 +1,5 @@
 require 'rails_helper'
-require Rails.root.join 'lib/assets/log_parsers/cyber_adapt_log'
+require 'log_parsers/cyber_adapt_log'
 
 RSpec.describe CyberAdaptLog do
   before :all do
