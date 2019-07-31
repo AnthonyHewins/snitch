@@ -12,7 +12,7 @@ class FsIsacMailParser
     @string = strip_tags(str).gsub(/\s*\r\n\s*/, "\n")
     { # Order matters! This eats the string while parsing to make it one pass.
       title: find_then_eat("Title:\n", "\nTracking ID:\n"),
-      tracking_id: find_then_eat(nil, "\nReported Date/Time (UTC):\n"),
+      tracking_id: Integer(find_then_eat(nil, "\nReported Date/Time (UTC):\n")),
       alert_timestamp: find_then_eat(nil, "\nRisk:\n"),
       severity: Integer(find_then_eat(nil, "\nAudience:\n")),
       alert: find_then_eat("\nDescription:\n", "\nAffected Products:\n"),

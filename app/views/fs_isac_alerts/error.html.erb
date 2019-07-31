@@ -1,0 +1,13 @@
+<h1>Error</h1>
+<h5>Errors processing some FS-ISAC alerts.</h5>
+
+<% @errors.each do |exception, str| %>
+  <div class="ui red message">
+    <div class="header">
+      <%= exception %>
+    </div>
+    <p>
+      <%= str %>
+    </p>
+  </div>
+<% end %>

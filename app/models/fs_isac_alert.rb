@@ -1,37 +1,44 @@
+require 'concerns/fs_isac_alert_hook'
+
+require 'mail/mail_clients/fs_isac_mail_client'
+require 'mail/mail_parsers/fs_isac_mail_parser'
+
 class FsIsacAlert < ApplicationRecord
-  CsvColumns = FsIsacAlert.column_names
+  include FsIsacAlertHook
 
-  validates :tracking_id,
-            uniqueness: true,
-            presence: true,
-            inclusion: {in: 1..2147483647}
+  def self.create_from_exchange
+    init_email_vars
 
-  %i(
-     title alert affected_products corrective_action sources alert_timestamp
-  ).each do |sym|
-    validates_presence_of sym
-  end
-
-  SEVERITY_MIN = 1
-  SEVERITY_MAX = 10
-  validates :severity, inclusion: {in: SEVERITY_MIN..SEVERITY_MAX}
-
-  before_save do |record|
-    %i(title alert affected_products corrective_action sources).each do |sym|
-      record.send(sym).squish!.gsub!(",", '')
+    FsIsacMailClient.new.get_missing([]).each do |email|
+      hash = try_parse(email.body)
+      next if hash.nil? || @db_ids.include?(hash[:tracking_id])
+      insert hash
     end
-    record.comment ||= "Auto-classified as DOES NOT APPLY." unless record.applies
+
+    @errors
   end
 
-  scope :search, lambda {|q|
-    FsIsacAlert.where <<-SQL, q: "%#{q}%"
-      title like :q
-      or alert like :q
-      or affected_products like :q
-      or corrective_action like :q
-      or sources like :q
-      or TEXT(tracking_id) like :q
-      or TEXT(alert_timestamp) like :q
-    SQL
-  }
+  class << self
+    private
+    def try_parse(str)
+      begin
+        @parser.parse str
+      rescue Exception => e
+        @errors << [e, str]
+        nil
+      end
+    end
+
+    def init_email_vars
+      @db_ids = Set.new FsIsacAlert.pluck(:tracking_id)
+      @parser = FsIsacMailParser.new
+      @ignore = FsIsacIgnore.all_regexps
+      @errors = []
+    end
+
+    def insert(hash)
+      hash[:applies] = false if @ignore.any? {|i| i.match? hash[:title]}
+      FsIsacAlert.create hash
+    end
+  end
 end

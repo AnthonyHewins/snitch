@@ -21,10 +21,9 @@ Rails.application.routes.draw do
   resources :machines, except: [:show]
   resources :fs_isac_ignores
 
-  %i(cyber_adapt_alerts fs_isac_alerts).each do |sym|
-    resources sym, except: %i(new create) do
-      get 'set_booleans', on: :member
-    end
+  resources :fs_isac_alerts, except: %i(new) do
+    get 'set_booleans', on: :member
+    get 'error', on: :collection
   end
 
   root 'static#index'

@@ -11,6 +11,20 @@
           <%= f.label :applies, "Applies?" %>
         </div>
       </div>
+
+      <div class="field">
+        <%= f.label :severity %>
+        <div class="ui selection dropdown">
+          <input type="hidden" name="fs_isac_alert[severity]">
+          <i class="dropdown icon"></i>
+          <div class="default text">Severity</div>
+          <div class="menu">
+            <% (FsIsacAlert::SEVERITY_MIN..FsIsacAlert::SEVERITY_MAX).each do |i| %>
+              <div class="item" data-value="<%= i %>"><%= i %></div>
+            <% end %>
+          </div>
+        </div>
+      </div>
       
       <div class="field">
         <div class="ui checkbox">

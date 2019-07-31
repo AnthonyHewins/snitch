@@ -17,6 +17,7 @@
       <th>Tracking ID</th>
       <th>Title</th>
       <th>Alert timestamp</th>
+      <th>Severity</th>
       <th>Are we vulnerable?</th>
       <th>Resolved?</th>
     </tr>
@@ -28,6 +29,7 @@
         <td><%= record.tracking_id                            %></td>
         <td><%= record.title                                  %></td>
         <td><%= record.alert_timestamp                        %></td>
+        <td><%= record.severity                               %></td>
         <td><%= mark_as_applies record                        %></td>
         <td><%= resolve_fs_isac record                        %></td>
       </tr>

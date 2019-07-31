@@ -8,7 +8,7 @@
   <h5>
     FS-ISAC's Tracking ID: <%= @alert.tracking_id %>
   </h5>
-  
+
   <%= link_to "Edit", edit_fs_isac_alert_path(@alert) %>
 
   <div class="ui items">
@@ -32,6 +32,23 @@
         </div>
         <div class="meta">
           <span>Click the icon to reverse.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="content">
+        <div class="header">
+          <i class="red exclamation icon"></i>
+          Severity of
+          <%= @alert.severity %>
+        </div>
+        <div class="meta">
+          <p>
+            *This value is by default given by FS-ISAC,
+            but altering it for our own purposes is
+            allowed in the edit page
+          </p>
         </div>
       </div>
     </div>
@@ -75,7 +92,7 @@
     <div class="item">
       <div class="content">
         <div class="header">
-          <i class="red exclamation icon"></i>
+          <i class="green server icon"></i>
           Affected products
         </div>
         <div class="description">
