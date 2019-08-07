@@ -1,3 +1,5 @@
+require 'viewpoint'
+
 require_relative 'application_controller'
 require 'concerns/authenticatable'
 require 'concerns/alert_endpoint'
@@ -39,7 +41,7 @@ class FsIsacAlertsController < ApplicationController
   end
 
   def pull_from_exchange
-    @errors = FsIsacAlert.create_from_exchange
+    @errors = get_new_alerts
     if @errors.empty?
       flash[:info] = "Successfully pulled down FS-ISAC alerts"
       redirect_to fs_isac_alerts_path
@@ -55,5 +57,13 @@ class FsIsacAlertsController < ApplicationController
 
   def fs_isac_alert_params
     params.require(:fs_isac_alert).permit :comment, :resolved, :applies, :severity
+  end
+
+  def get_new_alerts
+    begin
+      FsIsacAlert.create_from_exchange
+    rescue Viewpoint::EWS::Errors::UnauthorizedResponseError => e
+      [e]
+    end
   end
 end

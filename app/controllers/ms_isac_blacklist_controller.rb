@@ -1,3 +1,5 @@
+require 'viewpoint'
+
 require 'blacklist/blacklist_manager'
 
 class MsIsacBlacklistController < ApplicationController
@@ -5,8 +7,10 @@ class MsIsacBlacklistController < ApplicationController
     begin
       BlacklistManager.new.update_blacklist
       flash.now[:info] = "Successfully pulled IPs/domains down"
-    rescue
-      flash.now[:red] = "Error pulling down IPs: check error logs"
+    rescue Viewpoint::EWS::Errors::UnauthorizedResponseError
+      flash[:error] = "There's a problem connecting to Outlook. Is everything okay with the server?"
+    rescue Exception => e
+      flash[:error] = "Error pulling down IPs: #{e}"
     end
 
     redirect_to root_path
