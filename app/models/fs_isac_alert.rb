@@ -20,6 +20,13 @@ class FsIsacAlert < ApplicationRecord
 
   class << self
     private
+    def init_email_vars
+      @db_ids = Set.new FsIsacAlert.pluck(:tracking_id)
+      @parser = FsIsacMailParser.new
+      @ignore = FsIsacIgnore.all_regexps
+      @errors = []
+    end
+
     def try_parse(str)
       begin
         @parser.parse str
@@ -27,13 +34,6 @@ class FsIsacAlert < ApplicationRecord
         @errors << [e, str]
         nil
       end
-    end
-
-    def init_email_vars
-      @db_ids = Set.new FsIsacAlert.pluck(:tracking_id)
-      @parser = FsIsacMailParser.new
-      @ignore = FsIsacIgnore.all_regexps
-      @errors = []
     end
 
     def insert(hash)

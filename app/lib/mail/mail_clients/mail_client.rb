@@ -1,4 +1,5 @@
 require 'yaml'
+require 'erb'
 require 'viewpoint'
 
 require 'client/searchable'
@@ -10,11 +11,9 @@ class MailClient
   ENDPOINT = "https://email.flexibleplan.com/ews/Exchange.asmx"
 
   def initialize(endpoint=ENDPOINT, user=USER, password=nil)
-    if password.nil?
-      secrets = YAML.load(File.open(Rails.root.join 'config/secrets.yml'))
-      password = secrets['mail_password']
-    end
-    @endpoint, @user, @password = endpoint || ENDPOINT, user || USER, password
+    @endpoint = endpoint || ENDPOINT
+    @password = password || load_yaml['mail_password']
+    @user = user || USER
   end
 
   def pull(mailbox, opts={}, &filter)
@@ -32,5 +31,13 @@ class MailClient
     items = Viewpoint::EWSClient.new(@endpoint, @user, @password)
               .get_folder(mailbox).items
     from.nil? ? items : items.select {|i| i.from.email == from}
+  end
+
+  def load_yaml
+    YAML.load(
+      ERB.new(
+        File.read(Rails.root.join 'config/secrets.yml')
+      ).result
+    )
   end
 end

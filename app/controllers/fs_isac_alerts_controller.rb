@@ -25,7 +25,7 @@ class FsIsacAlertsController < ApplicationController
 
   def error
   end
-  
+
   def update
     if @alert.update fs_isac_alert_params
       flash[:info] = "Updated FS-ISAC alert ##{@alert.tracking_id}"
@@ -46,7 +46,7 @@ class FsIsacAlertsController < ApplicationController
       flash[:info] = "Successfully pulled down FS-ISAC alerts"
       redirect_to fs_isac_alerts_path
     else
-      redirect_to error_fs_isac_alerts_path
+      render :error
     end
   end
 
@@ -63,7 +63,7 @@ class FsIsacAlertsController < ApplicationController
     begin
       FsIsacAlert.create_from_exchange
     rescue Viewpoint::EWS::Errors::UnauthorizedResponseError => e
-      [e]
+      [[e, "There was an error trying to connect to the outlook server"]]
     end
   end
 end
