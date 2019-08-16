@@ -1,4 +1,5 @@
 require 'application_controller'
+require 'concerns/machine_search'
 require 'concerns/authenticatable'
 require 'concerns/data_log_endpoint'
 require 'log_parsers/carbon_black_log'
@@ -6,12 +7,13 @@ require 'log_parsers/carbon_black_log'
 class MachinesController < ApplicationController
   include Authenticatable
   include DataLogEndpoint
+  include MachineSearch
 
   before_action :check_if_logged_in
   before_action :set_machine, only: %i(update edit destroy)
 
   def index
-    @machines = filter Machine
+    @machines = filter
     respond @machines
   end
 

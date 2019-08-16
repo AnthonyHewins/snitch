@@ -1,12 +1,14 @@
 require 'viewpoint'
 
-require_relative 'application_controller'
+require 'application_controller'
+require 'concerns/fs_isac_alert_search'
 require 'concerns/authenticatable'
 require 'concerns/alert_endpoint'
 
 require 'fs_isac_alert'
 
 class FsIsacAlertsController < ApplicationController
+  include FsIsacAlertSearch
   include Authenticatable
   include AlertEndpoint
 
@@ -14,7 +16,7 @@ class FsIsacAlertsController < ApplicationController
   before_action :set_alert, only: %i(set_booleans show edit update)
 
   def index
-    @alerts = filter(FsIsacAlert).order(
+    @alerts = filter.order(
       'applies desc, resolved asc, severity desc, alert_timestamp desc, tracking_id desc'
     )
     respond @alerts

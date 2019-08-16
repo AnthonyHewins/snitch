@@ -1,0 +1,130 @@
+<%= form_tag uri_entries_path, method: :get, class: "ui form" do |f| %>
+  <h4 class="ui dividing header">User info</h4>
+
+  <div class="fields">
+    <div class="six wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :host, params[:host], placeholder: "Host" %>
+        <i class="hdd icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :user, params[:user], placeholder: "Username" %>
+        <i class="user icon"></i>
+      </div>
+    </div>
+
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :ip, params[:ip], placeholder: "IP" %>
+        <i class="server icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="ui dividing header">URI info</h4>
+
+  <div class="fields">
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :id_start, params[:id_start], placeholder: "ID range start" %>
+        <i class="database icon"></i>
+      </div>
+    </div>
+
+    <div class="eight wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :uri, params[:uri], placeholder: "URI" %>
+        <i class="globe icon"></i>
+      </div>
+    </div>
+
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :hits_start, params[:hits_start], placeholder: "Hits start" %>
+        <i class="slack hash icon"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="fields">
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :id_end, params[:id_end], placeholder: "ID range end" %>
+        <i class="database icon"></i>
+      </div>
+    </div>
+
+    <div class="eight wide field">
+      <%# DIVIDER ======================================== %>
+    </div>
+    
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :hits_end, params[:hits_end], placeholder: "Hits end" %>
+        <i class="slack hash icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="ui dividing header">Metadata</h4>
+
+  <div class="fields">
+    <div class="four wide field">
+      <label>Recorded on start</label>
+      <div class="ui icon input">
+        <%= date_field_tag :dhcp_date_start, params[:dhcp_date_start] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <label>Created at start</label>
+      <div class="ui icon input">
+        <%= date_field_tag :created_at_start, params[:created_at_start] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <label>Updated at start</label>
+      <div class="ui icon input">
+        <%= date_field_tag :updated_at_start, params[:updated_at_start] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="four wide field">
+      <label>Recorded on end</label>
+      <div class="ui icon input">
+        <%= date_field_tag :dhcp_date_end, params[:dhcp_date_end] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <label>Created at end</label>
+      <div class="ui icon input">
+        <%= date_field_tag :created_at_end, params[:created_at_end] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <label>Updated at end</label>
+      <div class="ui icon input">
+        <%= date_field_tag :updated_at_end, params[:updated_at_end] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <button class="primary ui icon button" type="submit">
+    <i class="search icon"></i>
+    Search
+  </button>
+<% end %>

@@ -5,10 +5,6 @@ class FsIsacIgnore < ApplicationRecord
 
   CsvColumns = FsIsacIgnore.column_names
 
-  scope :search, lambda {|q|
-    FsIsacIgnore.where "regex_string ilike :q", q: "%#{q}%"
-  }
-
   def self.all_regexps
     string_ref_to_cut_down_overhead = 'i'
     pluck(:regex_string, :case_sensitive).map do |str, i|

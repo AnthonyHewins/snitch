@@ -1,0 +1,26 @@
+<% name = name.gsub('[', '\[').gsub(']', '\]') %>
+<% dropdown_class = "ui fluid #{'multiple' if multiple} search selection dropdown" %>
+
+<%# =================================================================== %>
+
+<div class="<%= dropdown_class %>" id="<%= name %>">
+  <input name="<%= name %>" type="hidden">
+
+  <i class="dropdown icon"></i>
+  <%= content_tag :div, default_text, class: "default text" %>
+
+  <div class="menu">
+    <% options.each do |option| %>
+      <%= yield(option) %>
+    <% end %>
+  </div>
+</div>
+
+<% if selected %>
+  <script>
+   $('#<%= name %>').dropdown(
+       'set selected',
+       <%= select_in_dropdown(selected) %>
+   );
+  </script>
+<% end %>

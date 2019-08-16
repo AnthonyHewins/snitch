@@ -5,11 +5,11 @@ class FsIsacIgnoresController < ApplicationController
   include Authenticatable
   include ReportableEndpoint
 
-  before_action :set_fs_isac_ignore, only: [:show, :edit, :update, :destroy]
+  before_action :set_fs_isac_ignore, only: %i(show edit update destroy)
   before_action :check_if_logged_in
 
   def index
-    @fs_isac_ignores = filter FsIsacIgnore
+    @fs_isac_ignores = FsIsacIgnore.where 'regex_string ilike ?', "%#{params[:q]}%"
     respond @fs_isac_ignores
   end
 

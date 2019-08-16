@@ -27,17 +27,5 @@ module FsIsacAlertHook
       end
       record.comment ||= "Auto-classified as DOES NOT APPLY." unless record.applies
     end
-
-    scope :search, lambda {|q|
-      FsIsacAlert.where <<-SQL, q: "%#{q}%"
-      title like :q
-      or alert like :q
-      or affected_products like :q
-      or corrective_action like :q
-      or sources like :q
-      or TEXT(tracking_id) like :q
-      or TEXT(alert_timestamp) like :q
-    SQL
-    }
   end
 end

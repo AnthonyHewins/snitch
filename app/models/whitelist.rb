@@ -18,12 +18,6 @@ class Whitelist < ApplicationRecord
     UriEntry.destroy matched.map(&:first)
   end
 
-  scope :search, lambda {|q|
-    Whitelist.left_outer_joins(:paper_trail).where <<-SQL, q: "%#{q}%"
-      regex_string like :q or TEXT(paper_trails.insertion_date) like :q
-    SQL
-  }
-
   def regex
     @regex_obj ||= Regexp.new self.regex_string
   end

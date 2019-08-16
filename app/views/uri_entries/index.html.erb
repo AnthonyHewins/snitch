@@ -1,22 +1,35 @@
-<%= render('shared/data_log_index',
-           title: "CyberAdapt traffic",
-           model: UriEntry,
-           var: @uri_entries,
-           html_path: uri_entries_path,
-           csv_path: uri_entries_path(q: params[:q], all: true, format: :csv),
-           th: [
-               "ID",
-               "IP",
-               "User",
-               "Host",
-               "URI",
-               "Hits",
-               "CyberAdapt recorded this on",
-               "Was put into the database at",
-               "Was last updated at"
-           ]) do %>
+<div class="ui container">
+  <%= render 'shared/index_header',
+             title: "CyberAdapt traffic log",
+             model: UriEntry,
+             var: @uri_entries %>
 
-  <br>
+  <%= render 'uri_entries/search' %>
+  
   <%= link_to "Pull new log entries from CyberAdapt", uri_entries_refresh_path %>
+</div>
 
-<% end %>
+<table class="ui striped celled table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>IP</th>
+      <th>User</th>
+      <th>Host</th>
+      <th>URI</th>
+      <th>Hits</th>
+      <th>CyberAdapt recorded this on</th>
+      <th>Was put into the database at</th>
+      <th>Was last updated at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @uri_entries.find_each do |entry| %>
+      <tr>
+        <% entry.to_a(*UriEntry::CsvColumns).each do |col| %>
+          <td><%= col %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

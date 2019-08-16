@@ -1,0 +1,15 @@
+<% options = local_assigns.fetch(:options, Department.select(:id, :name)) %>
+
+<%# ================================================================== %>
+
+<%= render("shared/dropdown",
+           name: "department",
+           multiple: local_assigns.fetch(:multiple, false),
+           default_text: "Department",
+           options: options,
+           selected: local_assigns[:selected]) do |department| %>
+
+  <div class="item" data-value="<%= department.id %>">
+    <%= department.name %>
+  </div>
+<% end %>

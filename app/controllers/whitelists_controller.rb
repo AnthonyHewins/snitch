@@ -10,7 +10,7 @@ class WhitelistsController < ApplicationController
   before_action :check_if_logged_in
 
   def index
-    @whitelists = filter Whitelist
+    @whitelists = Whitelist.where 'regex_string ilike ?', "%#{params[:q]}%"
     respond @whitelists
   end
 

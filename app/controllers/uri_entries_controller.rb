@@ -1,5 +1,6 @@
+require 'application_controller'
+require 'concerns/uri_entry_search'
 require 'concerns/authenticatable'
-require_relative 'application_controller'
 require 'data_log_endpoint'
 require 'sftp/cyber_adapt_sftp_client'
 require 'log_parsers/cyber_adapt_log'
@@ -7,11 +8,12 @@ require 'log_parsers/cyber_adapt_log'
 class UriEntriesController < ApplicationController
   include Authenticatable
   include DataLogEndpoint
+  include UriEntrySearch
 
   before_action :check_if_logged_in
 
   def index
-    @uri_entries = filter(UriEntry).order('paper_trails.insertion_date desc')
+    @uri_entries = filter.order('paper_trails.insertion_date desc')
     respond @uri_entries
   end
 
