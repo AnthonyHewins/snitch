@@ -1,0 +1,176 @@
+<%= form_tag fs_isac_alerts_path, method: :get, class: "ui form" do |f| %>
+  <h4 class="ui dividing header">Data</h4>
+
+  <div class="fields">
+    <div class="five wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :title, params[:title], placeholder: "Title" %>
+        <i class="hdd icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :alert, params[:alert], placeholder: "Alert" %>
+        <i class="user icon"></i>
+      </div>
+    </div>
+
+    <div class="five wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :affected_products, params[:affected_products], placeholder: "Affected products" %>
+        <i class="server icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="eight wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :corrective_action, params[:corrective_action], placeholder: "Corrective action" %>
+        <i class="server icon"></i>
+      </div>
+    </div>
+
+    <div class="eight wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :sources, params[:sources], placeholder: "Sources" %>
+        <i class="server icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="ui dividing header">Timestamp data</h4>
+
+  <div class="fields">
+    <div class="four wide field">
+      <label>Alert timestamp start</label>
+      <div class="ui icon input">
+        <%= date_field_tag :alert_timestamp_start, params[:alert_timestamp_start] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <label>Created at start</label>
+      <div class="ui icon input">
+        <%= date_field_tag :created_at_start, params[:created_at_start] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <label>Updated at start</label>
+      <div class="ui icon input">
+        <%= date_field_tag :updated_at_start, params[:updated_at_start] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="four wide field">
+      <label>Alert timestamp end</label>
+      <div class="ui icon input">
+        <%= date_field_tag :alert_timestamp_end, params[:alert_timestamp_end] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <label>Created at end</label>
+      <div class="ui icon input">
+        <%= date_field_tag :created_at_end, params[:created_at_end] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+
+    <div class="six wide field">
+      <label>Updated at end</label>
+      <div class="ui icon input">
+        <%= date_field_tag :updated_at_end, params[:updated_at_end] %>
+        <i class="calendar icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="ui dividing header">Tracking metadata</h4>
+
+  <div class="fields">
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :id_start, params[:id_start], placeholder: "ID range start" %>
+        <i class="database icon"></i>
+      </div>
+    </div>
+
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :tracking_id_start, params[:tracking_id_start], placeholder: "Tracking ID range start" %>
+        <i class="database icon"></i>
+      </div>
+    </div>
+
+    <div class="eight wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :comment, params[:comment], placeholder: "Search by comment" %>
+        <i class="database icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :id_end, params[:id_end], placeholder: "ID range end" %>
+        <i class="database icon"></i>
+      </div>
+    </div>
+
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :tracking_id_end, params[:tracking_id_end], placeholder: "Tracking ID range end" %>
+        <i class="database icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="ui dividing header">Applicability and severity</h4>
+
+  <div class="fields">
+    <div class="four wide field">
+      <div class="ui checkbox input">
+        <%= check_box_tag :applies, params[:applies] %>
+        <label>Applies to us?</label>
+      </div>
+    </div>
+
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :severity_start, params[:severity_start], placeholder: "Severity start" %>
+        <i class="exclamation icon"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="fields">
+    <div class="four wide field">
+      <div class="ui checkbox input">
+        <%= check_box_tag :resolved, params[:resolved] %>
+        <label>Resolved?</label>
+      </div>
+    </div>
+
+    <div class="four wide field">
+      <div class="ui icon input">
+        <%= text_field_tag :severity_end, params[:severity_end], placeholder: "Severity end" %>
+        <i class="exclamation icon"></i>
+      </div>
+    </div>
+  </div>
+  
+  <button class="primary ui icon button" type="submit">
+    <i class="search icon"></i>
+    Search
+  </button>
+<% end %>

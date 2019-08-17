@@ -1,14 +1,18 @@
-<%= render('shared/index_header',
-           title: "FS ISAC Alerts",
-           model: FsIsacAlert,
-           var: @alerts) %>
+<div class="ui container">
+  <%= render('shared/index_header',
+             title: "FS ISAC Alerts",
+             model: FsIsacAlert,
+             var: @alerts) %>
+  
+  <%= render 'fs_isac_alerts/search' %>
+  
+  <%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
+   fs_isac_alerts_path(q: params[:q], all: true, format: :csv) %>
+  <br>
+  <%= link_to("Pull alerts down from Exchange server", fs_isac_alerts_refresh_path)%>
 
-<%= render 'shared/search', path: fs_isac_alerts_path %>
-
-<%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
- fs_isac_alerts_path(q: params[:q], all: true, format: :csv) %>
-<br>
-<%= link_to("Pull alerts down from Exchange server", fs_isac_alerts_refresh_path)%>
+  <%= will_paginate @alerts %>
+</div>
 
 <table class="ui striped celled table">
   <thead>

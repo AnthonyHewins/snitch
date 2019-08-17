@@ -10,8 +10,10 @@
    machines_path(q: params[:q], all: true, format: :csv) %>
 
   <br>
-  
+
   <%= link_to "New machine", new_machine_path %>
+
+  <%= will_paginate @machines %>
 </div>
 
 <table class="ui striped celled table">

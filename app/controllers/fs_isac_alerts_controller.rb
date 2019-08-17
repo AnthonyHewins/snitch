@@ -16,10 +16,17 @@ class FsIsacAlertsController < ApplicationController
   before_action :set_alert, only: %i(set_booleans show edit update)
 
   def index
-    @alerts = filter.order(
-      'applies desc, resolved asc, severity desc, alert_timestamp desc, tracking_id desc'
-    )
-    respond @alerts
+    @alerts = filter
+    respond_to do |f|
+      f.html do
+        @alerts = @alerts.order(
+          'applies desc, resolved asc, severity desc, alert_timestamp desc, tracking_id desc'
+        ).paginate(page: params[:page], per_page: 100)
+      end
+      f.csv do
+        respond @alerts
+      end
+    end
   end
 
   def show
@@ -33,7 +40,7 @@ class FsIsacAlertsController < ApplicationController
       flash[:info] = "Updated FS-ISAC alert ##{@alert.tracking_id}"
       redirect_to fs_isac_alerts_path
     else
-      flash.now[:red] = "Unable to edit alert ##{@alert.tracking_id}"
+      flash.now[:red] = @alert.errors
       render :edit
     end
   end

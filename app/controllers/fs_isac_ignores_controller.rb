@@ -10,7 +10,14 @@ class FsIsacIgnoresController < ApplicationController
 
   def index
     @fs_isac_ignores = FsIsacIgnore.where 'regex_string ilike ?', "%#{params[:q]}%"
-    respond @fs_isac_ignores
+    respond_to do |f|
+      f.html do
+        @fs_isac_ignores = @fs_isac_ignores.paginate(page: params[:page], per_page: 100)
+      end
+      f.csv do
+        respond @alerts
+      end
+    end
   end
 
   def new

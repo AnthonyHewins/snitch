@@ -7,6 +7,8 @@
   <%= render 'uri_entries/search' %>
   
   <%= link_to "Pull new log entries from CyberAdapt", uri_entries_refresh_path %>
+
+  <%= will_paginate @uri_entries %>
 </div>
 
 <table class="ui striped celled table">

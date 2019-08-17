@@ -3,21 +3,15 @@ module ReportableEndpoint
     respond_to do |format|
       format.html
       format.csv do
-        headers['Content-disposition'] = generate_disposition relation
-        headers['Content-type'] ||= 'text/csv'
+        headers['Content-disposition'] = generate_disposition relation.model
+        headers['Content-type'] = 'text/csv'
       end
     end
   end
 
   private
-  def generate_disposition(relation)
-    query, time = params[:q], DateTime.now.strftime("%Y%m%d%H%M")
-    if query.blank?
-      filename = "#{relation.model}_#{time}.csv"
-    else
-      # Substring the query so there's no overflow in the filename
-      filename = "#{relation.model}_#{query[0..25]}_#{time}.csv"
-    end
-    "attachment; filename=\"#{filename}\""
+  def generate_disposition(model)
+    time = DateTime.now.strftime("%Y%m%d%H%M")
+    "attachment; filename=\"#{model}_#{time}.csv\""
   end
 end

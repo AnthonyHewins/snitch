@@ -13,8 +13,16 @@ class UriEntriesController < ApplicationController
   before_action :check_if_logged_in
 
   def index
-    @uri_entries = filter.order('paper_trails.insertion_date desc')
-    respond @uri_entries
+    @uri_entries = filter
+    respond_to do |f|
+      f.html do
+        @uri_entries = @uri_entries.order('paper_trails.insertion_date desc')
+                         .paginate(page: params[:page], per_page: 100)
+      end
+      f.csv do
+        respond filter
+      end
+    end
   end
 
   def pull_from_cyberadapt

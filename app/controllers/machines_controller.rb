@@ -14,7 +14,14 @@ class MachinesController < ApplicationController
 
   def index
     @machines = filter
-    respond @machines
+    respond_to do |f|
+      f.html do
+        @machines = @machines.paginate(page: params[:page], per_page: 100)
+      end
+      f.csv do
+        respond @machines
+      end
+    end
   end
 
   def create
