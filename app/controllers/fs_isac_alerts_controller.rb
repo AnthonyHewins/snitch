@@ -1,9 +1,11 @@
+require 'csv'
 require 'viewpoint'
 
 require 'application_controller'
 require 'concerns/fs_isac_alert_search'
 require 'concerns/authenticatable'
 require 'concerns/alert_endpoint'
+require 'concerns/reportable_endpoint'
 
 require 'fs_isac_alert'
 
@@ -11,17 +13,18 @@ class FsIsacAlertsController < ApplicationController
   include FsIsacAlertSearch
   include Authenticatable
   include AlertEndpoint
+  include ReportableEndpoint
 
+  ORDER = 'applies desc, resolved asc, severity desc, alert_timestamp desc, tracking_id desc'
+  
   before_action :check_if_logged_in
   before_action :set_alert, only: %i(set_booleans show edit update)
 
   def index
-    @alerts = filter
+    @alerts = filter.order(ORDER)
     respond_to do |f|
       f.html do
-        @alerts = @alerts.order(
-          'applies desc, resolved asc, severity desc, alert_timestamp desc, tracking_id desc'
-        ).paginate(page: params[:page], per_page: 100)
+        @alerts = @alerts.paginate(page: params[:page], per_page: 100)
       end
       f.csv do
         respond @alerts

@@ -38,26 +38,4 @@ RSpec.describe FsIsacAlert, type: :model do
         .to eq "Auto-classified as DOES NOT APPLY."
     end
   end
-
-  context 'scope(:search)' do
-    %i(tracking_id title alert affected_products corrective_action sources).each do |sym|
-      it "finds based on :#{sym}" do
-        expect(FsIsacAlert.search @obj.send(sym)).to include @obj
-      end
-    end
-
-    it 'finds based on :alert_timestamp' do
-      expect(FsIsacAlert.search @obj.alert_timestamp.to_date).to include @obj
-    end
-  end
-
-  context '#to_a(cols)' do
-    it 'should returns self.map FsIsacAlert.column_names.map &:to_sym on cols.nil?' do
-      expect(@obj.to_a).to eq FsIsacAlert.column_names.map {|i| @obj.send(i.to_sym)}
-    end
-
-    it 'should return cols.map {|i| self.send i}' do
-      expect(@obj.to_a(:title)).to eq [@obj.title]
-    end
-  end
 end

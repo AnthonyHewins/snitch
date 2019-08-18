@@ -1,3 +1,15 @@
-<%= render 'shared/index.csv',
-           collection: @machines,
-           header: %w(id user host ip insertion_date created_at updated_at) %>
+<%= CSV.generate do |csv| -%>
+  <% csv << %w(id user host ip insertion_date created_at updated_at) %>
+  <% @machines.each do |record| %>
+    <% csv << [ %>
+    <%   record.id, %>
+    <%   record.user, %>
+    <%   record.host, %>
+    <%   record.ip, %>
+    <%   record.paper_trail&.insertion_date, %>
+    <%   record.created_at, %>
+    <%   record.updated_at %>
+    <% ] %>
+  <% end %>
+<%- end %>
+

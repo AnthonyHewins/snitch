@@ -1,3 +1,5 @@
+require 'csv'
+
 module ReportableEndpoint
   def respond(relation)
     respond_to do |format|

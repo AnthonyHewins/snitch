@@ -8,28 +8,6 @@ RSpec.describe UriEntry, type: :model do
 
   it {should belong_to(:paper_trail).required(false)}
 
-  context 'scope(:search)' do
-    %i(user host).each do |sym|
-      it "finds things based on machine.#{sym}" do
-        lease = create :dhcp_lease, machine: create(:machine, sym => 'hi')
-        @obj.update dhcp_lease: lease
-        expect(UriEntry.search('hi')).to include @obj
-      end
-    end
-
-    it 'finds things based on dhcp_lease.ip' do
-      lease = create :dhcp_lease
-      @obj.update dhcp_lease: lease
-      expect(UriEntry.search lease.ip).to include @obj
-    end
-
-    it "finds things based on :uri" do
-      uri = 'http://www.flexibleplan.com'
-      @obj.update uri: uri
-      expect(UriEntry.search(uri)).to include @obj
-    end
-  end
-
   context ':hits' do
     it 'is invalid when not an integer' do
       expect(build :uri_entry, hits: 9.1).to be_invalid
@@ -68,22 +46,6 @@ RSpec.describe UriEntry, type: :model do
     it "updates @url's value to maintain synchronization" do
       @obj.uri = "http://newuri.com"
       expect(@obj.url).to eq URI(@obj.uri)
-    end
-  end
-
-  context '#to_a' do
-    it 'maps each element in CsvColumns to make the machine ready for CSV output' do
-      expect(@obj.to_a).to eq([
-                                @obj.id,
-                                @obj.machine.ip,
-                                @obj.machine.user,
-                                @obj.machine.host,
-                                @obj.uri,
-                                @obj.hits,
-                                @obj.paper_trail&.insertion_date,
-                                @obj.created_at,
-                                @obj.updated_at
-                              ])
     end
   end
 

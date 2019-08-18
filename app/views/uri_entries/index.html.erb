@@ -7,7 +7,9 @@
   <%= render 'uri_entries/search' %>
   
   <%= link_to "Pull new log entries from CyberAdapt", uri_entries_refresh_path %>
-
+  <br>
+  <%= link_to "Download ALL these results as a CSV", uri_entries_path(params.to_unsafe_hash.merge(format: :csv)) %>
+  
   <%= will_paginate @uri_entries %>
 </div>
 
@@ -26,11 +28,17 @@
     </tr>
   </thead>
   <tbody>
-    <% @uri_entries.find_each do |entry| %>
+    <% @uri_entries.find_each do |record| %>
       <tr>
-        <% entry.to_a(*UriEntry::CsvColumns).each do |col| %>
-          <td><%= col %></td>
-        <% end %>
+        <td><%= record.id                          %></td>
+        <td><%= record.dhcp_lease.ip               %></td>
+        <td><%= record.machine&.user               %></td>
+        <td><%= record.machine&.host               %></td>
+        <td><%= record.uri                         %></td>
+        <td><%= record.hits                        %></td>
+        <td><%= record.paper_trail&.insertion_date %></td>
+        <td><%= record.created_at                  %></td>
+        <td><%= record.updated_at                  %></td>
       </tr>
     <% end %>
   </tbody>

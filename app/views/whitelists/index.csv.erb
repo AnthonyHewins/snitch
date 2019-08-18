@@ -1,3 +1,4 @@
-<%= render 'shared/index.csv',
-           collection: @whitelists,
-           header: %w(id regex_string insertion_date) %>
+<%= CSV.generate do |csv| -%>
+  <% csv << Whitelist.column_names %>
+  <% @whitelist.each {|record| Whitelist.column_names.map {|sym| record.send sym}} %>
+<%- end %>

@@ -1,3 +1,16 @@
-<%= render 'shared/index.csv',
-           collection: @uri_entries,
-           header: %w(id user host ip uri hits insertion_date created_at updated_at) %>
+<%= CSV.generate do |csv| -%>
+  <% csv << %w(id ip user host uri hits insertion_date created_at updated_at) %>
+  <% @uri_entries.each do |record| %>
+    <% csv << [ %>
+    <%   record.id, %>
+    <%   record.dhcp_lease.ip, %>
+    <%   record.machine&.user, %>
+    <%   record.machine&.host, %>
+    <%   record.uri, %>
+    <%   record.hits, %>
+    <%   record.paper_trail&.insertion_date, %>
+    <%   record.created_at, %>
+    <%   record.updated_at %>
+    <% ] %>
+  <% end %>
+<%- end %>

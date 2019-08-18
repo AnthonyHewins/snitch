@@ -1,3 +1,6 @@
-<%= render 'shared/index.csv',
-           collection: @fs_isac_ignores,
-           header: FsIsacIgnore.column_names %>
+<%= CSV.generate do |csv| -%>
+  <% csv << FsIsacIgnore.column_names %>
+  <% @fs_isac_ignores.each do |record| %>
+    <% csv << FsIsacIgnore.column_names.map {|sym| record.send sym} %>
+  <% end %>
+<%- end %>

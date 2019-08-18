@@ -6,8 +6,7 @@
 
   <%= render 'machines/search', path: machines_path %>
 
-  <%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
-   machines_path(q: params[:q], all: true, format: :csv) %>
+  <%= link_to "Download ALL these results as CSV", machines_path(params.to_unsafe_hash.merge(format: :csv)) %>
 
   <br>
 

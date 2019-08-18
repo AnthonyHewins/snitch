@@ -7,19 +7,6 @@ require 'machine'
 class UriEntry < ApplicationRecord
   include UriEntryHook
 
-  CsvColumns = [
-    :id,
-    proc {|record| record.dhcp_lease.ip},
-    proc {|record| record.machine&.user},
-    proc {|record| record.machine&.host},
-    :uri,
-    :hits,
-    proc {|record| record.paper_trail&.insertion_date},
-    :created_at,
-    :updated_at
-  ]
-
-
   def url
     @url ||= URI(self.uri)
   end

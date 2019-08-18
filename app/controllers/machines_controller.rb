@@ -13,7 +13,7 @@ class MachinesController < ApplicationController
   before_action :set_machine, only: %i(update edit destroy)
 
   def index
-    @machines = filter
+    @machines = filter.order(:id)
     respond_to do |f|
       f.html do
         @machines = @machines.paginate(page: params[:page], per_page: 100)

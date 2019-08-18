@@ -3,8 +3,6 @@ require 'concerns/regex_validatable'
 class FsIsacIgnore < ApplicationRecord
   include Concerns::RegexValidatable
 
-  CsvColumns = FsIsacIgnore.column_names
-
   def self.all_regexps
     string_ref_to_cut_down_overhead = 'i'
     pluck(:regex_string, :case_sensitive).map do |str, i|

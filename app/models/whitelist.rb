@@ -4,12 +4,6 @@ require 'concerns/regex_validatable'
 class Whitelist < ApplicationRecord
   include Concerns::RegexValidatable
 
-  CsvColumns = [
-    :id,
-    :regex_string,
-    proc {|record| record.paper_trail&.insertion_date}
-  ]
-
   belongs_to :paper_trail, optional: true
 
   after_save do |record|

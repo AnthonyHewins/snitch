@@ -6,8 +6,7 @@
   
   <%= render 'fs_isac_alerts/search' %>
   
-  <%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
-   fs_isac_alerts_path(q: params[:q], all: true, format: :csv) %>
+  <%= link_to "Download ALL these results as CSV", fs_isac_alerts_path(params.to_unsafe_hash.merge(format: :csv)) %>
   <br>
   <%= link_to("Pull alerts down from Exchange server", fs_isac_alerts_refresh_path)%>
 

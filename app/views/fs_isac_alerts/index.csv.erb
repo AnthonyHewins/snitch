@@ -1,3 +1,6 @@
-<%= render 'shared/index.csv',
-           collection: @alerts,
-           header: FsIsacAlert::CsvColumns %>
+<%= CSV.generate do |csv| -%>
+  <% csv << FsIsacAlert.column_names %>
+  <% @alerts.each do |record| %>
+    <% csv << FsIsacAlert.column_names.map {|sym| record.send sym} %>
+  <% end %>
+<%- end %>

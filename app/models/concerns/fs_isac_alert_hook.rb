@@ -4,8 +4,6 @@ module FsIsacAlertHook
   extend ActiveSupport::Concern
 
   included do
-    CsvColumns = FsIsacAlert.column_names
-    
     validates :tracking_id,
               uniqueness: true,
               presence: true,

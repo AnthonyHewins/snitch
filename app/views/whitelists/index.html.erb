@@ -1,8 +1,32 @@
+<%= render 'shared/index_header',
+           title: "Whitelists",
+           model: Whitelist,
+           var: @whitelists %>
+
+<%= render 'shared/search', path: whitelists_path %>
+
+<%= link_to "Download ALL these results as CSV", whitelists_path(params.to_unsafe_hash.merge(format: :csv)) %>
+
 <%= will_paginate @whitelists %>
 
-<%= render 'shared/data_log_index',
-           model: Whitelist,
-           var: @whitelists,
-           html_path: whitelists_path,
-           csv_path: whitelists_path(q: params[:q], all: true, format: :csv),
-           th: ["ID", "Ruby regex", "Was created on"] %>
+<% table_headers = local_assigns[:th] || model::CsvColumns %>
+<% display_columns = local_assigns[:td] %>
+
+<table class="ui striped celled table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Ruby regex</th>
+      <th>Was created on</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @whitelists.each do |record| %>
+      <tr>
+        <th><%= record.id                          %></th>
+        <th><%= record.regex_string                %></th>
+        <th><%= record.paper_trail&.insertion_date %></th>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

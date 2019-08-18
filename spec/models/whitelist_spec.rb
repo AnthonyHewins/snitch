@@ -34,26 +34,6 @@ RSpec.describe Whitelist, type: :model do
     end
   end
 
-  context 'scope(:search)' do
-    it "finds things based on paper_trail.insertion_date" do
-      expect(Whitelist.search(@obj.paper_trail.insertion_date.to_date)).to include @obj
-    end
-
-    it "finds things based on regex_string" do
-      expect(Whitelist.search(@obj.regex_string)).to include @obj
-    end
-  end 
-  
-  context '#to_a' do
-    it 'maps each element in CsvColumns to make the machine ready for CSV output' do
-      expect(@obj.to_a).to eq([
-                                @obj.id,
-                                @obj.regex_string,
-                                @obj.paper_trail&.insertion_date,
-                              ])
-    end
-  end
-
   context '#regex' do
     it 'should proxy the value for regex_string in @regex_obj as a regex' do
       expect(@obj.regex).to eq Regexp.new(@obj.regex_string)

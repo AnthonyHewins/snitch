@@ -16,10 +16,4 @@ RSpec.describe PaperTrail, type: :model do
       expect(build(:paper_trail, insertion_date: nil)).to_not be_valid
     end
   end
-
-  context '#to_a' do
-    it 'maps each element in CsvColumns to make the machine ready for CSV output' do
-      expect(@obj.to_a).to eq PaperTrail::CsvColumns.map {|i| @obj.send i}
-    end
-  end
 end

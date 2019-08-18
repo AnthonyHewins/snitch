@@ -4,16 +4,6 @@ require 'concerns/machine_hook'
 class Machine < ApplicationRecord
   include MachineHook
 
-  CsvColumns = [
-    :id,
-    :user,
-    :host,
-    :ip,
-    lambda {|machine| machine.paper_trail&.insertion_date},
-    :created_at,
-    :updated_at
-  ]
-
   def ip(date=nil)
     case date
     when NilClass
