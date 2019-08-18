@@ -1,16 +1,12 @@
-<%= render 'shared/index_header',
-           title: "Whitelists",
-           model: Whitelist,
-           var: @whitelists %>
+<div class="ui container">
+  <h1>FS ISAC Alerts</h1>
+  <h3>Total: <%= Whitelist.count %></h3>
+  <h3>Showing: <%= @whitelists.size %></h3>
 
-<%= render 'shared/search', path: whitelists_path %>
+  <%= render 'shared/simple_search', path: whitelists_path %>
 
-<%= link_to "Download ALL these results as CSV", whitelists_path(params.to_unsafe_hash.merge(format: :csv)) %>
-
-<%= will_paginate @whitelists %>
-
-<% table_headers = local_assigns[:th] || model::CsvColumns %>
-<% display_columns = local_assigns[:td] %>
+  <%= will_paginate @whitelists %>
+</div>
 
 <table class="ui striped celled table">
   <thead>

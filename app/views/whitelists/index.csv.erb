@@ -1,4 +1,0 @@
-<%= CSV.generate do |csv| -%>
-  <% csv << Whitelist.column_names %>
-  <% @whitelist.each {|record| Whitelist.column_names.map {|sym| record.send sym}} %>
-<%- end %>

@@ -9,15 +9,8 @@ class FsIsacIgnoresController < ApplicationController
   before_action :check_if_logged_in
 
   def index
-    @fs_isac_ignores = FsIsacIgnore.where 'regex_string ilike ?', "%#{params[:q]}%"
-    respond_to do |f|
-      f.html do
-        @fs_isac_ignores = @fs_isac_ignores.paginate(page: params[:page], per_page: 100)
-      end
-      f.csv do
-        respond @alerts
-      end
-    end
+    @fs_isac_ignores = FsIsacIgnore.where('regex_string ilike ?', "%#{params[:q]}%")
+                         .order(:id).paginate(page: params[:page], per_page: 100)
   end
 
   def new

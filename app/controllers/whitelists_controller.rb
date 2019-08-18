@@ -10,15 +10,8 @@ class WhitelistsController < ApplicationController
   before_action :check_if_logged_in
 
   def index
-    @whitelists = Whitelist.where 'regex_string ilike ?', "%#{params[:q]}%"
-    respond_to do |f|
-      f.html do
-        @whitelists = @whitelists.paginate(page: params[:page], per_page: 100)
-      end
-      f.csv do
-        respond @whitelists
-      end
-    end
+    @whitelists = Whitelist.where('regex_string ilike ?', "%#{params[:q]}%")
+                    .paginate(page: params[:page], per_page: 100)
   end
 
   # POST /whitelists/upload

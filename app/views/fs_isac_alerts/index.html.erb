@@ -1,11 +1,10 @@
 <div class="ui container">
-  <%= render('shared/index_header',
-             title: "FS ISAC Alerts",
-             model: FsIsacAlert,
-             var: @alerts) %>
-  
+  <h1>FS ISAC Alerts</h1>
+  <h3>Total: <%= FsIsacAlert.count %></h3>
+  <h3>Showing: <%= @alerts.size %></h3>
+
   <%= render 'fs_isac_alerts/search' %>
-  
+
   <%= link_to "Download ALL these results as CSV", fs_isac_alerts_path(params.to_unsafe_hash.merge(format: :csv)) %>
   <br>
   <%= link_to("Pull alerts down from Exchange server", fs_isac_alerts_refresh_path)%>

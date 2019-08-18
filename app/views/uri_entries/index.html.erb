@@ -1,15 +1,27 @@
 <div class="ui container">
-  <%= render 'shared/index_header',
-             title: "CyberAdapt traffic log",
-             model: UriEntry,
-             var: @uri_entries %>
+  <h1>CyberAdapt Traffic</h1>
+  <h3>Total: <%= UriEntry.count %></h3>
+  <h3>Showing: <%= @uri_entries.size %></h3>
+
+  <a class="ui red animated button"
+     href="<%= uri_entries_refresh_path %>" tabindex="0">
+    <div class="visible content">Pull new log entries from CyberAdapt's SFTP server</div>
+    <div class="hidden content">
+      <i class="right arrow icon"></i>
+      <i class="server icon"></i> API request
+    </div>
+  </a>
+
+  <a class="ui purple animated button"
+     href="<%= uri_entries_path(to_csv_params) %>" tabindex="0">
+    <div class="visible content">Download ALL these results as CSV</div>
+    <div class="hidden content">
+      <i class="align justify icon"></i> Download
+    </div>
+  </a>
 
   <%= render 'uri_entries/search' %>
-  
-  <%= link_to "Pull new log entries from CyberAdapt", uri_entries_refresh_path %>
-  <br>
-  <%= link_to "Download ALL these results as a CSV", uri_entries_path(params.to_unsafe_hash.merge(format: :csv)) %>
-  
+
   <%= will_paginate @uri_entries %>
 </div>
 

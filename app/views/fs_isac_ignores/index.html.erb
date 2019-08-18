@@ -1,17 +1,17 @@
-<%= render('shared/index_header',
-           title: "FS-ISAC ignore rules",
-           model: FsIsacIgnore,
-           var: @fs_isac_ignores) %>
+<div class="ui container">
+  <h1>FS ISAC ignore list</h1>
+  <h3>Total: <%= FsIsacIgnore.count %></h3>
+  <h3>Showing: <%= @fs_isac_ignores.size %></h3>
+  <%= render 'shared/simple_search', path: fs_isac_ignores_path %>
 
-<%= render 'shared/search', path: fs_isac_ignores_path %>
+  <%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
+   fs_isac_ignores_path(q: params[:q], all: true, format: :csv) %>
+  <br>
 
-<%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
- fs_isac_ignores_path(q: params[:q], all: true, format: :csv) %>
-<br>
+  <%= link_to("New rule", new_fs_isac_ignore_path)%>
 
-<%= link_to("New rule", new_fs_isac_ignore_path)%>
-
-<%= will_paginate @fs_isac_ignores %>
+  <%= will_paginate @fs_isac_ignores %>
+</div>
 
 <table class="ui striped celled table">
   <thead>

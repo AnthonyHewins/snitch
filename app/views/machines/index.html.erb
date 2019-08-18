@@ -1,16 +1,29 @@
 <div class="ui container">
-  <%= render('shared/index_header',
-             title: "Machines",
-             model: Machine,
-             var: @machines) %>
+  <div class="ui grid">
+    <h1 class="eight wide column">Machines</h1>
+
+    <div class="eight wide right aligned column">
+      <a class="ui green animated button" href='/machines/new' tabindex="0">
+        <div class="visible content">+ New machine</div>
+        <div class="hidden content">
+          <i class="right arrow icon"></i>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <h3>Total: <%= Machine.count %></h3>
+  <h3>Showing: <%= @machines.size %></h3>
+
+  <a class="ui purple animated button"
+     href="<%= machines_path(to_csv_params) %>" tabindex="0">
+    <div class="visible content">Download ALL these results as CSV</div>
+    <div class="hidden content">
+      <i class="align justify icon"></i> Download
+    </div>
+  </a>
 
   <%= render 'machines/search', path: machines_path %>
-
-  <%= link_to "Download ALL these results as CSV", machines_path(params.to_unsafe_hash.merge(format: :csv)) %>
-
-  <br>
-
-  <%= link_to "New machine", new_machine_path %>
 
   <%= will_paginate @machines %>
 </div>

@@ -16,6 +16,13 @@ module ApplicationHelper
     end
   end
 
+  def to_csv_params
+    params.delete(:action)
+    params.delete(:controller)
+    params.delete(:utf8)
+    params.to_unsafe_hash.merge(format: :csv)
+  end
+  
   private
   def jquery_str(collection)
     collection.to_s.html_safe
