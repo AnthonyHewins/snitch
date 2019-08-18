@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_28_193602) do
+ActiveRecord::Schema.define(version: 2019_08_18_221429) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,8 +89,6 @@ ActiveRecord::Schema.define(version: 2019_07_28_193602) do
 
   create_table "whitelists", force: :cascade do |t|
     t.string "regex_string"
-    t.bigint "paper_trail_id"
-    t.index ["paper_trail_id"], name: "index_whitelists_on_paper_trail_id"
   end
 
 end

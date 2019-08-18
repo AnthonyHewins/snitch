@@ -1,14 +1,21 @@
 <div class="ui container">
-  <h1>FS ISAC ignore list</h1>
+  <div class="ui grid">
+    <h1 class="eight wide column">FS-ISAC Ignore List</h1>
+
+    <div class="eight wide right aligned column">
+      <a class="ui green animated button" href='/fs_isac_ignores/new' tabindex="0">
+        <div class="visible content">+ New ignore rule</div>
+        <div class="hidden content">
+          <i class="right arrow icon"></i>
+        </div>
+      </a>
+    </div>
+  </div>
+
   <h3>Total: <%= FsIsacIgnore.count %></h3>
   <h3>Showing: <%= @fs_isac_ignores.size %></h3>
+
   <%= render 'shared/simple_search', path: fs_isac_ignores_path %>
-
-  <%= link_to "Download these results as CSV (automatically downloads all, won't hide any)",
-   fs_isac_ignores_path(q: params[:q], all: true, format: :csv) %>
-  <br>
-
-  <%= link_to("New rule", new_fs_isac_ignore_path)%>
 
   <%= will_paginate @fs_isac_ignores %>
 </div>

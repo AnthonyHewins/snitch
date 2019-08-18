@@ -16,10 +16,10 @@ Rails.application.routes.draw do
   get 'fs_isac_alerts/refresh' => 'fs_isac_alerts#pull_from_exchange'
   get 'ms_isac_blacklist/refresh' => 'ms_isac_blacklist#pull_from_exchange'
 
-  resources :whitelists, only: [:index]
   resources :uri_entries, only: [:index]
   resources :machines, except: [:show]
   resources :fs_isac_ignores
+  resources :whitelists
 
   resources :fs_isac_alerts, except: %i(new) do
     get 'set_booleans', on: :member

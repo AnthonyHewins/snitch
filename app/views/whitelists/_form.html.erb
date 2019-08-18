@@ -1,0 +1,14 @@
+<%= form_with(model: whitelist, local: true, class: "ui form") do |form| %>
+  <div class="field">
+    <%= form.label :regex_string %>
+    <%= form.text_field :regex_string, placeholder: "Regex string" %>
+  </div>
+
+  <div class="field">
+    *before you submit, you may want to test your regex against
+    <%= link_to "Rubular", "https://rubular.com", target: :_blank %>
+    with a few test strings to confirm that it works.
+  </div>
+
+  <%= form.submit class: "ui primary button" %>
+<% end %>

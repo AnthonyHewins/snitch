@@ -5,7 +5,7 @@
     <div class="text">Whitelists</div>
     <i class="dropdown icon"></i>
     <div class="menu">
-      <%= link_to "Whitelist", whitelists_path, class: "item" %>
+      <%= link_to "CyberAdapt whitelist", whitelists_path, class: "item" %>
       <%= link_to "Ignore list for FS-ISAC alerts", fs_isac_ignores_path, class: "item" %>
     </div>
   </div>
@@ -28,7 +28,7 @@
     </div>
   </div>
   <div class="right menu">
-    <div class="item">Snitch v1.5.2</div>
+    <div class="item">Snitch v1.7</div>
     <% if session[:user_id].nil? %>
       <%= link_to "Login", login_path, class: "item" %>
     <% else %>
