@@ -3,11 +3,24 @@
   <h3>Total: <%= FsIsacAlert.count %></h3>
   <h3>Showing: <%= @alerts.size %></h3>
 
-  <%= render 'fs_isac_alerts/search' %>
+  <a class="ui red animated button"
+     href="<%= fs_isac_alerts_refresh_path %>" tabindex="0">
+    <div class="visible content">Pull new alerts from email cache</div>
+    <div class="hidden content">
+      <i class="right arrow icon"></i>
+      <i class="server icon"></i> API request
+    </div>
+  </a>
 
-  <%= link_to "Download ALL these results as CSV", fs_isac_alerts_path(params.to_unsafe_hash.merge(format: :csv)) %>
-  <br>
-  <%= link_to("Pull alerts down from Exchange server", fs_isac_alerts_refresh_path)%>
+  <a class="ui purple animated button"
+     href="<%= fs_isac_alerts_path(to_csv_params) %>" tabindex="0">
+    <div class="visible content">Download ALL these results as CSV</div>
+    <div class="hidden content">
+      <i class="align justify icon"></i> Download
+    </div>
+  </a>
+
+  <%= render 'fs_isac_alerts/search' %>
 
   <%= will_paginate @alerts %>
 </div>

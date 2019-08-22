@@ -24,4 +24,9 @@ module Searchable
   def date_parse(sym)
     DateTime.parse(params[sym]) rescue nil
   end
+
+  def bool_check(sym)
+    return nil unless params.key?(sym)
+    params[sym] == "on" || params[sym] == "1" || params[sym] == "true"
+  end
 end

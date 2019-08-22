@@ -15,7 +15,7 @@ class FsIsacAlertsController < ApplicationController
   include AlertEndpoint
   include ReportableEndpoint
 
-  ORDER = 'applies desc, resolved asc, severity desc, alert_timestamp desc, tracking_id desc'
+  ORDER = 'applies desc, resolved asc, alert_timestamp desc, severity desc, tracking_id desc'
   
   before_action :check_if_logged_in
   before_action :set_alert, only: %i(set_booleans show edit update)

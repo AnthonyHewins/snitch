@@ -15,7 +15,7 @@ module AlertEndpoint
   def extract_update_data(fields)
     update_hash = {}
     fields.select {|i| params.key? i}
-      .each {|i| update_hash[i] = params[i] == "true"}
+      .each {|i| update_hash[i] = truthy(i)}
     update_hash
   end
 
@@ -24,5 +24,10 @@ module AlertEndpoint
     hash.map do |k,v|
       "Updated alert ID##{id}'s #{k} value to #{v}"
     end
+  end
+
+  def truthy(sym)
+    val = params[sym].strip.downcase
+    val == "true" || val == "on" || val == "1"
   end
 end

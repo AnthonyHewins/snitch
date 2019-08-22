@@ -72,9 +72,4 @@ module FsIsacAlertSearch
     q = q.where('alert_timestamp <= ?', stop) unless stop.blank?
     q
   end
-  
-  def bool_check(sym)
-    return nil unless params.key?(sym)
-    params[sym] == "1"
-  end
 end
