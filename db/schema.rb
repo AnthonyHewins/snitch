@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_18_221429) do
+ActiveRecord::Schema.define(version: 2019_09_30_214944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,10 @@ ActiveRecord::Schema.define(version: 2019_08_18_221429) do
     t.datetime "updated_at", null: false
     t.index ["machine_id"], name: "index_dhcp_leases_on_machine_id"
     t.index ["paper_trail_id"], name: "index_dhcp_leases_on_paper_trail_id"
+  end
+
+  create_table "domains", force: :cascade do |t|
+    t.string "name", null: false
   end
 
   create_table "fs_isac_alerts", force: :cascade do |t|
@@ -57,8 +61,18 @@ ActiveRecord::Schema.define(version: 2019_08_18_221429) do
     t.datetime "updated_at", null: false
     t.bigint "paper_trail_id"
     t.bigint "department_id"
+    t.bigint "domain_id"
     t.index ["department_id"], name: "index_machines_on_department_id"
+    t.index ["domain_id"], name: "index_machines_on_domain_id"
     t.index ["paper_trail_id"], name: "index_machines_on_paper_trail_id"
+  end
+
+  create_table "machines_programs", force: :cascade do |t|
+    t.bigint "machine_id", null: false
+    t.bigint "program_id", null: false
+    t.date "date_installed"
+    t.string "path"
+    t.index ["machine_id", "program_id"], name: "index_machines_programs_on_machine_id_and_program_id"
   end
 
   create_table "paper_trails", force: :cascade do |t|
@@ -66,6 +80,17 @@ ActiveRecord::Schema.define(version: 2019_08_18_221429) do
     t.date "insertion_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "programs", force: :cascade do |t|
+    t.bigint "publisher_id", null: false
+    t.string "name", null: false
+    t.string "version", null: false
+    t.index ["publisher_id"], name: "index_programs_on_publisher_id_id"
+  end
+
+  create_table "publishers", force: :cascade do |t|
+    t.string "name", null: false
   end
 
   create_table "uri_entries", force: :cascade do |t|
