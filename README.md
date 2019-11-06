@@ -27,7 +27,7 @@
 
 ## Inventory
 
-Navigate to [/machines](192.168.1.78/machines) to see our inventory.
+Navigate to [/machines](https://192.168.1.78/machines) to see our inventory.
 
 The data on this page includes plenty of information:
 
@@ -206,7 +206,10 @@ shouldn't have been, but I wasn't aware of them at the time.
    1. [Getting cyberadapt data](#getting-cyberadapt-data)
    2. [Getting mail](#getting-mail)
 2. [Deployment](#deployment)
-3. [Upkeep](#upkeep)
+3. [Deploying updates](#deploying-updates)
+   1. [Old build](#old-build)
+   2. [New build](#new-build)
+4. [Upkeep](#upkeep)
 
 ## Abstract view
 
@@ -262,6 +265,39 @@ There are some important details to consider:
 
 ## Deployment
 
+Hopefully you should never have to do this but it's possible if restructuring occurs. There's really nothing special here, it's your standard deployment with Rails.
 
+1. Make sure you have a server. At the time of writing this, we used 192.168.1.78. Ubuntu is my go-to for this stuff, you can pick something else if you'd like though
+2. Make sure that the code is available via some source control repository, like GitHub
+3. [Get SSH access](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2) to the system and harden it
+   * Harden it by changing the port
+   * Harden it by only allowing key-based authentication
+   * Harden it by not allowing logging into root (if you're using VMware, you can always use the VMware console to get back in as root)
+     * Don't be stupid though, make sure the deployment user has enough permissions beforehand
+4. Follow this [guide](https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/ownserver/nginx/oss/install_language_runtime.html) UNTIL you reach step 6, which is actually deploying the app
+5. Follow this [guide](https://capistranorb.com/documentation/getting-started/installation/), which will automate your deployments in the future
+
+## Deploying updates
+
+#### Old build
+
+1. Commit your code, push to remote
+2. `cap production deploy`
+3. `ssh server-name`
+4. `bash /home/flexibleplan/var/www/snitch/new_release.sh`
+
+#### New build
+
+1. Commit your code, push to remote
+2. `cap production deploy`
+3. `ssh server-name`
+4. `cd /wherever/you/put/the/app/from/capistrano # it's more than likely /var/www or /home/deploy/var/www/...`
+5. If you updated the ruby version, `rvm use ruby-X.X.X`
+5. `bundle install --deployment --without development test`
+6. `bundle exec rake assets:precompile db:migrate RAILS_ENV=production`
+   * `RAILS_ENV=production` may be deprecated by the time you read this. You may want to change it to whatever's the new way
+7. `passenger-config restart-app $(pwd)`
 
 ## Upkeep
+
+Everything you need to know will be on [Kanboard](https://192.168.1.205/kanboard) for this topic. I have recurring tasks that will automatically repopulate once completed.
