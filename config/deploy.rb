@@ -6,7 +6,7 @@ app = "snitch"
 set :application, app
 
 set :user, "flexibleplan"
-set :deploy_to, "~/var/www/#{app}"
+set :deploy_to, "/var/www/#{app}"
 set :repo_url, "git@github.com:AnthonyHewins/snitch.git"
 
 set :default_stage, :production
